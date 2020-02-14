@@ -4,6 +4,7 @@ import java.util.UUID
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import mydatamodels.gameserver.interfaces.swagger.model.GameAction
+import mydatamodels.rps.interfaces.RPSElement
 import spray.json.{DefaultJsonProtocol, DeserializationException, JsString, JsValue, JsonFormat, RootJsonFormat}
 
 object MyJsonProtocol extends DefaultJsonProtocol {
@@ -38,6 +39,6 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
 
   import MyJsonProtocol._
 
-    implicit val pauseFormat = enumFormat(GameAction)
-  //  implicit val eventFormat = jsonFormat2(PauseCommandAPI)
+  implicit val element = enumFormat(RPSElement)
+  implicit val action = jsonFormat1(GameAction)
 }

@@ -31,7 +31,7 @@ trait GameLauncher {
     if (!game._match.isMatchReadyToStart)
       throw new IllegalStateException
 
-    new GameHttpServer
+    new GameHttpServer(game)
 
   }
 

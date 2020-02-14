@@ -17,14 +17,17 @@ import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives.{complete, _}
 import mydatamodels.core.application.http.common.Site
-import mydatamodels.gameserver.application.http.game.{GameRoute, SubmitOrder}
+import mydatamodels.gameserver.application.http.game.{Play, Reset, GetResults}
 import mydatamodels.gameserver.interfaces.swagger.SwaggerDocService
+import mydatamodels.rps.application.actors.GameActor
+import mydatamodels.rps.domain.ClassicGame
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class GameHttpServer(implicit val system: ActorSystem) extends Site {
+class GameHttpServer(game: ClassicGame)(implicit val system: ActorSystem) extends Site {
   val log = LoggerFactory.getLogger(getClass)
+  val gameActorRef = system.actorOf(GameActor.props(game), "GameActor")
 
   /*implicit def myExceptionHandler: ExceptionHandler =
     server.ExceptionHandler {
@@ -38,19 +41,19 @@ class GameHttpServer(implicit val system: ActorSystem) extends Site {
       }
 
     }
-
+*/
   implicit def myRejectionHandler =
     RejectionHandler.newBuilder()
       .handle {
-        case UnsupportedRequestContentTypeRejection(_) => {
-          complete(HttpResponse(StatusCodes.BadRequest, entity = "Invalid body !"))
+        case _ => {
+          complete(HttpResponse(StatusCodes.Forbidden, entity = "Invalid body !"))
         }
       }
       .handleNotFound {
         complete(HttpResponse(StatusCodes.InternalServerError))
       }
       .result()
-*/
+
 
   implicit val ec: ExecutionContext = system.dispatcher
   implicit val m: ActorMaterializer = ActorMaterializer()
@@ -61,8 +64,9 @@ class GameHttpServer(implicit val system: ActorSystem) extends Site {
 
       Route.seal(
         SwaggerDocService.routes ~
-          GameRoute(system).route ~
-          SubmitOrder(system).route ~
+          Play(system, gameActorRef).route ~
+          GetResults(system).route ~
+          Reset(system).route ~
           site)
 
     )

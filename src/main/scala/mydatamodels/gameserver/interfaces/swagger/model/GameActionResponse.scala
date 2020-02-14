@@ -7,6 +7,6 @@ import io.swagger.annotations.ApiModel
 @ApiModel(description = "Game action response")
 case class GameActionResponse
 (
-  returnCode: Int,
+  humanWins: Boolean,
   message: String
 )
