@@ -3,7 +3,7 @@ package mydatamodels.gameserver.application.service
 import akka.actor.ActorSystem
 import mydatamodels.core.application.service.CommonGameService
 import mydatamodels.core.interfaces.{GameConfiguration, MatchID}
-import mydatamodels.gameserver.application.http.OrderManagerHttpServer
+import mydatamodels.gameserver.application.http.GameHttpServer
 import mydatamodels.rps.domain.ClassicGame
 
 import scala.collection.mutable
@@ -31,7 +31,7 @@ trait GameLauncher {
     if (!game._match.isMatchReadyToStart)
       throw new IllegalStateException
 
-    new OrderManagerHttpServer
+    new GameHttpServer
 
   }
 

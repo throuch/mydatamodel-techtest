@@ -23,10 +23,7 @@ import mydatamodels.gameserver.interfaces.swagger.SwaggerDocService
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-@Api(value = "/play")
-@Consumes(value = Array("application/json", "application/json"))
-@Produces(value = Array("application/json", "application/json"))
-class OrderManagerHttpServer(implicit val system: ActorSystem) extends Site {
+class GameHttpServer(implicit val system: ActorSystem) extends Site {
   val log = LoggerFactory.getLogger(getClass)
 
   /*implicit def myExceptionHandler: ExceptionHandler =

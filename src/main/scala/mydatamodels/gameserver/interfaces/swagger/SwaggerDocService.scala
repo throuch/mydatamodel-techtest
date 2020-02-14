@@ -14,7 +14,8 @@ object SwaggerDocService extends SwaggerHttpService {
   val PROTOCOL = config.getString("swagger.api.scheme.protocol")
 
   override val apiClasses: Set[Class[_]] = Set(
-
+    classOf[Ping],
+    classOf[Status],
     classOf[OrderAPI]
   )
   override val host = API_URL //the url of your api, not swagger's json endpoint
@@ -27,8 +28,8 @@ object SwaggerDocService extends SwaggerHttpService {
   //  val buildInfo = Buil
   override val info = Info(
     "Swagger Akka http Order microservice....",
-    "1.0.0",
-    "RPS",
+    "0.1.0",
+    "Rock-Paper-Scissors",
     termsOfService = "http://swagger.io/terms/",
     license = Some(License("Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0.html")),
     contact = Some(Contact("Thomas ROUCH", "", "thomas.rouch.prestat@srr.fr"))
