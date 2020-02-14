@@ -26,6 +26,7 @@ class Match(val id: MatchID = UUID.randomUUID(),
 
 
   def getVisitorPlayer: Player = visitorPlayer
+
   def getHomePlayer: Player = homePlayer
 
   def registerPlayerOne(player: HumanPlayer): Unit = {
@@ -59,21 +60,21 @@ class Match(val id: MatchID = UUID.randomUUID(),
   }
 
   def isMatchReadyToStart: Boolean = {
-    humanPlayerSlots.forall( _ == true )
+    humanPlayerSlots.forall(_ == true)
   }
 }
 
 
 object Match {
 
-  def apply( human: HumanPlayer ): Match = {
-    val m = new Match(expectHumanPlayersCount= 1)
+  def apply(human: HumanPlayer): Match = {
+    val m = new Match(expectHumanPlayersCount = 1)
     m.registerPlayerOne(human)
     m
   }
 
-  def apply(  ): Match = {
-    new Match(expectHumanPlayersCount= 0)
+  def apply(): Match = {
+    new Match(expectHumanPlayersCount = 0)
   }
 
 }

@@ -5,7 +5,7 @@ import org.scalatest.FunSuite
 class GameServiceTest extends FunSuite {
 
   test("testCreateRockPaperScissorsGame") {
-      cancel("test not implemented")
+    cancel("test not implemented")
   }
 
   test("testRegisterHumanPlayers") {

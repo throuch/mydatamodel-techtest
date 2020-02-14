@@ -8,10 +8,8 @@ import mydatamodels.core.domain.{ComputerPlayer1, ComputerPlayer2, Game, Player}
  * Fast implementation  of classical game Human Vs Computer
  *
  * in the future, could be an Actor (reactive)
- * */
-class ClassicGame (_m: Match) extends Game[ClassicElement](_m, new ClassicGameEngine) {
-
-
+ **/
+class ClassicGame(_m: Match) extends Game[ClassicElement](_m, new ClassicGameEngine) {
 
 
   def start = {
@@ -29,12 +27,11 @@ class ClassicGame (_m: Match) extends Game[ClassicElement](_m, new ClassicGameEn
     println("[NEW GAME]")
 
 
-
-    println(s"plays :> ${elementTwo.toString}")
-    val result = gameEngine.compare(
-      DomainConverter.toDomain(elementOne),
-      DomainConverter.toDomain(elementTwo))
-
+    //    println(s"plays :> ${elementTwo.toString}")
+    //    val result = gameEngine.compare(
+    //      DomainConverter.toDomain(elementOne),
+    //      DomainConverter.toDomain(elementTwo))
+    val result = 0
     if (result > 0) {
       println(s"${_match.getVisitorPlayer.name} wins !")
     }

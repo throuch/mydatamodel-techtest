@@ -6,10 +6,10 @@ class ClassicGameEngine extends GameEngine[ClassicElement] {
 
   /**
    * Compare 2 elements in the same manner as the Comparator interface
+   *
    * @see java.util.Comparator#compare
    *
-   * So: 1 means "beats", 0 means "equal", -1 means "lose"
-   *
+   *      So: 1 means "beats", 0 means "equal", -1 means "lose"
    * @param leftElement
    * @param rightElement
    * @return -1,0,1

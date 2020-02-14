@@ -35,10 +35,11 @@ trait GameService {
    * return an exception if the expected number of players is wrong
    */
   def registerHumanPlayers(matchID: MatchID, playerID: PlayerID*): Unit
+
   /**
    * create a new player
    * return an exception if the player is under 18 years
-   *  */
+   **/
   def createHumanPlayer(pseudo: String, birthdate: LocalDate): PlayerID
 
   def getRoundResult(matchId: MatchID, roundIndex: RoundIndex): RoundResult

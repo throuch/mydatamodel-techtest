@@ -6,5 +6,7 @@ sealed trait ClassicElement extends Element
 
 
 case object Rock extends ClassicElement
+
 case object Scissors extends ClassicElement
+
 case object Paper extends ClassicElement

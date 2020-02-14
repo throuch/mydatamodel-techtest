@@ -12,26 +12,17 @@ object GameApp extends App {
 
   import injection.Module._
 
-  implicit val system = ActorSystem("RPS")
-  implicit val executionContext = system.dispatcher
+
+  val matchID =
+    DefaultGameService.createRockPaperScissorsGame(GameConfiguration(Human, Computer))
+
+  val playerID = DefaultGameService.createHumanPlayer("Thomas", LocalDate.parse("1977-05-30"))
+  DefaultGameService.registerHumanPlayers(matchID, playerID)
+
+  DefaultGameService.start(matchID)
 
 
-
-
-
-
-
-      val matchID =
-        DefaultGameService.createRockPaperScissorsGame(GameConfiguration(Human, Computer))
-
-        val playerID = DefaultGameService.createHumanPlayer("Thomas", LocalDate.parse("1977-05-30"))
-        DefaultGameService.registerHumanPlayers(matchID, playerID)
-
-      DefaultGameService.start(matchID)
-
-
-  Await.result(system.whenTerminated, Duration.Inf)
-
+  //  Await.result(system.whenTerminated, Duration.Inf)
 
 
 }

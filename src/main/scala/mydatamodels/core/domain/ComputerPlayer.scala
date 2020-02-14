@@ -5,7 +5,7 @@ import mydatamodels.core.interfaces.PlayerID
 
 
 trait Computer extends Player {
-  override val id: PlayerID= UUID.randomUUID()
+  override val id: PlayerID = UUID.randomUUID()
 }
 
 object ComputerPlayer1 extends Computer {

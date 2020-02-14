@@ -7,8 +7,8 @@ import mydatamodels.core.domain.Player
 import mydatamodels.core.interfaces.PlayerID
 
 
-class HumanPlayer(override val id: PlayerID= UUID.randomUUID(),
+class HumanPlayer(override val id: PlayerID = UUID.randomUUID(),
                   pseudo: String,
-                  birthDate: LocalDate) extends Player  {
+                  birthDate: LocalDate) extends Player {
   override val name = s"Player $pseudo"
 }

@@ -6,6 +6,9 @@ object Dependencies {
   lazy val commonDependencies = Seq(
     "org.scalactic" %% "scalactic" % "3.0.5" % Test,
     "org.scalatest" %% "scalatest" % "3.0.5" % Test,
+    "ch.qos.logback" % "logback-classic" % "1.2.3",
+    "ch.qos.logback" % "logback-core" % "1.2.3"
+
   )
 
   lazy val akkaArtifacts = new {

@@ -12,7 +12,7 @@ import mydatamodels.core.interfaces.PlayerType.PlayerType
  * @param roundCount
  */
 case class GameConfiguration(playerOne: PlayerType,
-                        playerTwo: PlayerType,
-                        roundCount: Short = 1) {
+                             playerTwo: PlayerType,
+                             roundCount: Short = 1) {
 
 }

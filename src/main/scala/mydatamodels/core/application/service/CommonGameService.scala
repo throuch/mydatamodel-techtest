@@ -10,7 +10,7 @@ import scala.collection.mutable
 
 trait CommonGameService {
   val matches: mutable.Map[MatchID, Match] = mutable.HashMap[MatchID, Match]()
-  val players : mutable.Map[PlayerID, HumanPlayer] = mutable.HashMap[PlayerID, HumanPlayer]()
+  val players: mutable.Map[PlayerID, HumanPlayer] = mutable.HashMap[PlayerID, HumanPlayer]()
 
 
   /**
@@ -18,7 +18,6 @@ trait CommonGameService {
    *
    * @param config the game configuration
    * @return a match
-   *
    * @see nicecactus.core.domain.entities.Match
    */
   def createMatch(config: GameConfiguration): Match = {
@@ -45,11 +44,10 @@ trait CommonGameService {
    *
    * @param matchID
    * @param playerID
-   *
    * @exception UnsupportedOperationException if the supported number of players is wrong
    * @exception IllegalArgumentException if the player doesn't exist
    */
-   def registerHumanPlayers(matchID: MatchID, playerID: PlayerID*): Unit = {
+  def registerHumanPlayers(matchID: MatchID, playerID: PlayerID*): Unit = {
     if (playerID.size == 1) {
       if (!players.contains(playerID(0)))
         throw new IllegalArgumentException(s"Unknown player ID ${playerID(0)}")
@@ -63,15 +61,16 @@ trait CommonGameService {
 
   /**
    * create a new player
-   * @exception  if the player is under 18 years
+   *
+   * @exception if the player is under 18 years
    **/
-   def createHumanPlayer(pseudo: String, birthDate: LocalDate): PlayerID = {
-    val player = new HumanPlayer(pseudo= pseudo, birthDate= birthDate)
+  def createHumanPlayer(pseudo: String, birthDate: LocalDate): PlayerID = {
+    val player = new HumanPlayer(pseudo = pseudo, birthDate = birthDate)
     players.put(player.id, player)
     player.id
   }
 
-   def getRoundResult(matchId: MatchID, roundIndex: RoundIndex): RoundResult = ???
+  def getRoundResult(matchId: MatchID, roundIndex: RoundIndex): RoundResult = ???
 
-   def getMatchResult(matchId: MatchID): MatchResult = ???
+  def getMatchResult(matchId: MatchID): MatchResult = ???
 }
