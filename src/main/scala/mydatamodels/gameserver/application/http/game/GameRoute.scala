@@ -1,25 +1,36 @@
 package mydatamodels.gameserver.application.http.game
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.server.Directives.{complete, get, _}
+import akka.actor.{ActorRef, ActorSystem}
+import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
+import akka.http.scaladsl.server.Directives.{complete, entity, _}
 import mydatamodels.core.application.http.HttpCommon
-
+import mydatamodels.gameserver.interfaces.swagger.model
+import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
+import org.json4s.jackson.Serialization.write
+import org.json4s.{CustomSerializer, DefaultFormats}
+import akka.pattern.ask
 import scala.concurrent.Await
 
-case class SearchOrders(system: ActorSystem) extends HttpCommon {
+case class GameRoute(system: ActorSystem, gameactor: ActorRef) extends HttpCommon {
+  implicit val formats = DefaultFormats
 
   val route =
-    get {
-      pathPrefix("order") {
-        pathEndOrSingleSlash {
+    path("play") {
+      post {
+        entity(as[GameAction]) { event =>
+          //system.eventStream.publish( PauseEvent(event.destTaskId, event.pause))
 
-          parameters('external_ref ?, 'status ?, 'state ?, 'fromCreatedAt ?, 'toCreatedAt ?, 'fromTerminatedAt ?, 'toTerminatedAt ?) {
-            (external_ref: Option[String],
-             status: Option[String], state: Option[String],
-             fromCreatedAt: Option[String], toCreatedAt: Option[String],
-             fromTerminatedAt: Option[String], toTerminatedAt: Option[String]) =>
-              completeJson(StatusCodes.OK, "{]")
+          val status = Await.result(
+            gameactor ? event,
+            timeout.duration).asInstanceOf[GameActionResponse]
+
+          //complete(HttpResponse(StatusCodes.OK, entity =model.GameActionResponse(1,"")))
+          completeJson(StatusCodes.OK, write(GameActionResponse(1,"")))
+        }
+      }
+    }
+}
+
             //              extractRequest { request =>
             //
             //                log.info("Received SearchOrders request !")
@@ -50,11 +61,4 @@ case class SearchOrders(system: ActorSystem) extends HttpCommon {
             //              }
             //          }
             //        }
-
-          }
-        }
-      }
-
-    }
-}
 

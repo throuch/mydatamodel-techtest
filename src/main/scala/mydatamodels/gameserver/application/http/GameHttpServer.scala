@@ -17,7 +17,7 @@ import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives.{complete, _}
 import mydatamodels.core.application.http.common.Site
-import mydatamodels.gameserver.application.http.game.{SearchOrders, SubmitOrder}
+import mydatamodels.gameserver.application.http.game.{GameRoute, SubmitOrder}
 import mydatamodels.gameserver.interfaces.swagger.SwaggerDocService
 
 import scala.concurrent.ExecutionContext
@@ -61,7 +61,7 @@ class GameHttpServer(implicit val system: ActorSystem) extends Site {
 
       Route.seal(
         SwaggerDocService.routes ~
-          SearchOrders(system).route ~
+          GameRoute(system).route ~
           SubmitOrder(system).route ~
           site)
 

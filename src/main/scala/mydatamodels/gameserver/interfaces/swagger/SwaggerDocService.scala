@@ -3,7 +3,7 @@ package mydatamodels.gameserver.interfaces.swagger
 import com.github.swagger.akka.SwaggerHttpService
 import com.github.swagger.akka.model.{Contact, Info, License}
 import com.typesafe.config.ConfigFactory
-import mydatamodels.gameserver.interfaces.swagger.game.OrderAPI
+import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
 
 object SwaggerDocService extends SwaggerHttpService {
   val config = ConfigFactory.load()
@@ -16,7 +16,7 @@ object SwaggerDocService extends SwaggerHttpService {
   override val apiClasses: Set[Class[_]] = Set(
     classOf[Ping],
     classOf[Status],
-    classOf[OrderAPI]
+    classOf[GameAPI]
   )
   override val host = API_URL //the url of your api, not swagger's json endpoint
   override val apiDocsPath = "api-docs" //where you want the swagger-json endpoint exposed

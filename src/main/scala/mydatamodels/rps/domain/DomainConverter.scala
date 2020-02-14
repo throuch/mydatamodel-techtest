@@ -6,9 +6,9 @@ object DomainConverter {
 
   def toDomain(e: RPSElement.RPSElement): ClassicElement = {
     e match {
-      case RPSElement.Rock => Rock
-      case RPSElement.Scissors => Scissors
-      case RPSElement.Paper => Paper
+      case RPSElement.`rock` => Rock
+      case RPSElement.`scissors` => Scissors
+      case RPSElement.`paper` => Paper
       case _ => throw new IllegalArgumentException
     }
 

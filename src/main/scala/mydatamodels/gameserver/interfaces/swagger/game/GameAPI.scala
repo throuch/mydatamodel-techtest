@@ -3,11 +3,14 @@ package mydatamodels.gameserver.interfaces.swagger.game
 import akka.http.scaladsl.server.Route
 import io.swagger.annotations._
 import javax.ws.rs.Path
+import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
+import akka.http.scaladsl.server.Route
+import io.swagger.annotations._
 
-@Path("/order")
-@Api(value = "Orders")
+@Path("/play")
+@Api(value = "GameAction")
 @SwaggerDefinition(tags = Array(new Tag(name = "hello", description = "operations useful for debugging")))
-trait OrderAPI {
+trait GameAPI {
   /* @Path("{id}")
   @ApiOperation(
     value = "Retrieve an order by {id}",
@@ -27,16 +30,32 @@ trait OrderAPI {
       paramType = "path"
     )
 
-  ))
+  ))*/
+  @ApiOperation(
+    value = "Play Rock or Paper or Scissors",
+    nickname = "play",
+    httpMethod = "POST",
+    consumes = "application/json",
+    response = classOf[GameActionResponse])
+  @ApiImplicitParams(
+    Array(
+       new ApiImplicitParam(
+        name = "body",
+        value = "Game action",
+        dataTypeClass = classOf[GameAction],
+        required = true,
+        paramType = "body"
+      )
+    )
+  )
   @ApiResponses(Array(
-    new ApiResponse(code = 200, message = "OK", response = classOf[OrdersRow]),
-    new ApiResponse(code = 404, message = "Order not found"),
-    new ApiResponse(code = 400, message = "Invalid ID supplied"),
-    new ApiResponse(code = 405, message = "Invalid input")
+    new ApiResponse(code = 200, message = "You played <play>, I played <AI-play>, you <win/lose>", response = classOf[GameActionResponse]),
+    new ApiResponse(code = 418, message = "You played <play>, I played <AI-play>, you <win/lose>"),
+    new ApiResponse(code = 403, message = "if invalid input")
   ))
-  def titi: Option[Route] = None
+  def whatever: Option[Route] = None
 
-
+/*
   @ApiOperation(
     value = "Searches for orders by criteria",
     nickname = "searchOrders",
