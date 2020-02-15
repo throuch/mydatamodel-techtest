@@ -7,10 +7,11 @@ import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionR
 import akka.http.scaladsl.server.Route
 import io.swagger.annotations._
 
-@Path("/play")
+@Path("/")
 @Api(value = "GameAction")
 @SwaggerDefinition(tags = Array(new Tag(name = "hello", description = "operations useful for debugging")))
 trait GameAPI {
+  @Path("play")
   @ApiOperation(
     value = "Play Rock or Paper or Scissors",
     nickname = "play",
@@ -30,11 +31,32 @@ trait GameAPI {
     )
   )
   @ApiResponses(Array(
-    new ApiResponse(code = 200, message = "You played <play>, I played <AI-play>, you <win/lose>", response = classOf[GameActionResponse]),
-    new ApiResponse(code = 418),
+    new ApiResponse(code = 200, message = "You played <play>, I played <AI-play>, you <win/lose>"),
+    new ApiResponse(code = 418, message = "You played <play>, I played <AI-play>, you <win/lose>"),
     new ApiResponse(code = 403, message = "if invalid input")
   ))
   def whatever: Option[Route] = None
 
+
+  @Path("reset")
+  @ApiOperation(
+    value = "Reset results",
+    nickname = "reset",
+    httpMethod = "GET")
+  @ApiResponses(Array(
+    new ApiResponse(code = 200, message = "OK"),
+  ))
+  def whatever2: Option[Route] = None
+
+  @Path("results")
+  @ApiOperation(
+    value = "Results",
+    nickname = "results",
+    httpMethod = "GET",
+    produces = "application/json")
+  @ApiResponses(Array(
+    new ApiResponse(code = 200, message = "{\"player\": <number of win>, \"computer\": <number of win>}"),
+  ))
+  def whatever3: Option[Route] = None
 
 }

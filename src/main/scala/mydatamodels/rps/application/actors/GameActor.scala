@@ -1,6 +1,8 @@
 package mydatamodels.rps.application.actors
 
 import akka.actor.{Actor, Props}
+import mydatamodels.core.infrastructure.InMemoryMatchRecorder
+import mydatamodels.gameserver.application.injection.Module
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
 import mydatamodels.rps.domain.{ClassicGame, ComputerAI, DomainConverter}
 import mydatamodels.rps.interfaces.RPSElement.RPSElement
@@ -21,8 +23,14 @@ class GameActor(game: ClassicGame) extends Actor {
     s"You played $humanElement, I played $computerElement, you $humanResult"
   }
 
-  def getHumanResult(computerElement: RPSElement,
-                     humanElement: RPSElement): GameResult.GameResult = {
+  /**
+   *
+   * @param computerElement
+   * @param humanElement
+   * @return win/lose for the human player
+   */
+  def computeGameHumanResult(computerElement: RPSElement,
+                             humanElement: RPSElement): GameResult.GameResult = {
     val result = game.gameEngine.compare(
       DomainConverter.toDomain(computerElement),
       DomainConverter.toDomain(humanElement))
@@ -39,7 +47,9 @@ class GameActor(game: ClassicGame) extends Actor {
     val humanHand = action.myHand
     val computerHand = ComputerAI.getHand()
 
-    val humanResult = getHumanResult(computerHand, humanHand)
+    val humanResult = computeGameHumanResult(computerHand, humanHand)
+
+    Module.DefaultMatchRecorder.recordRoundResult(humanResult == GameResult.win)
 
     GameActionResponse(humanResult == GameResult.win,
       formatMatchResult(computerHand,
