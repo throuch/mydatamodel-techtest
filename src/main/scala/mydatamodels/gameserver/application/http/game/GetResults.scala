@@ -26,7 +26,7 @@ case class GetResults(system: ActorSystem) extends HttpCommon with GameAPI {
       pathPrefix("results") {
         pathEndOrSingleSlash {
 
-          val ScoreRecord(_, humanWins, computerWins) = InMemoryMatchRepository.getScoreView(GameApp.matchID)
+          val ScoreRecord(_, computerWins, humanWins) = InMemoryMatchRepository.getScoreView(GameApp.matchID)
           val json = s"""{\"player\": ${humanWins}, \"computer\": ${computerWins}}"""
           completeJson(StatusCodes.OK, json)
 

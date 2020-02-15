@@ -19,12 +19,12 @@ object InMemoryMatchRepository extends MatchRepository {
 
   override def incrementHumanScore(matchId: MatchID): Unit = {
     val prev = matchDb.getOrElseUpdate(matchId, MatchObjectValue(matchId))
-    matchDb + (matchId → prev.copy(humanScore = prev.humanScore + 1))
+    matchDb += (matchId → prev.copy(humanScore = prev.humanScore + 1))
   }
 
   override def incrementComputerScore(matchId: MatchID): Unit = {
     val prev = matchDb.getOrElseUpdate(matchId, MatchObjectValue(matchId))
-    matchDb + (matchId → prev.copy(computerScore = prev.computerScore + 1))
+    matchDb += (matchId → prev.copy(computerScore = prev.computerScore + 1))
   }
 
   // override def put(value: MatchObjectValue): Unit = matchDb + (value.matchId → value)
