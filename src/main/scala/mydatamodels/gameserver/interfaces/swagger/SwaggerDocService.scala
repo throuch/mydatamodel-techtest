@@ -8,7 +8,6 @@ import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
 object SwaggerDocService extends SwaggerHttpService {
   val config = ConfigFactory.load()
   val API_URL = s"${sys.env("ADVERTISED_HOST")}:${sys.env("ADVERTISED_PORT")}"
-  // OR  config.getString("swagger.api.url")
 
   val BASE_PATH = config.getString("swagger.api.base.path")
   val PROTOCOL = config.getString("swagger.api.scheme.protocol")
@@ -20,10 +19,6 @@ object SwaggerDocService extends SwaggerHttpService {
   )
   override val host = API_URL //the url of your api, not swagger's json endpoint
   override val apiDocsPath = "api-docs" //where you want the swagger-json endpoint exposed
-  //override val securitySchemeDefinitions = Map("basicAuth" -> new BasicAuthDefinition())
-  override val unwantedDefinitions = Seq(
-    "Function1"
-  )
 
   override val info = Info(
     "Swagger Akka http Order microservice....",

@@ -1,13 +1,8 @@
 package mydatamodels.rps.domain
 
-
-import mydatamodels.rps.interfaces.RPSElement
-import mydatamodels.rps.interfaces.RPSElement.RPSElement
-
 import scala.util.Random
 
 object ComputerAI extends PlayActionRecorder with AdvancedGameStrategy {
-
 
 }
 
@@ -15,9 +10,9 @@ object ComputerAI extends PlayActionRecorder with AdvancedGameStrategy {
 trait RoundRobinStrategy {
   var idx = 0
 
-  def getHand(): RPSElement = {
-    val elementValue = RPSElement.values.toIndexedSeq(idx)
-    idx = (idx + 1) % RPSElement.values.size
+  def getHand(): ClassicElement = {
+    val elementValue = ClassicElementValues.values.toIndexedSeq(idx)
+    idx = (idx + 1) % ClassicElementValues.values.size
     elementValue
   }
 }
@@ -28,13 +23,13 @@ trait RoundRobinStrategy {
  */
 trait AdvancedGameStrategy {
   this: PlayActionRecorder ⇒
-  def getHand(): RPSElement = {
+  def getHand(): ClassicElement = {
 
     val (r, p, s) = computeHumanRockPaperScissorsRatio()
 
-    val pool = IndexedSeq.fill[RPSElement](r)(RPSElement.paper) ++
-      IndexedSeq.fill[RPSElement](p)(RPSElement.scissors) ++
-      IndexedSeq.fill[RPSElement](s)(RPSElement.rock)
+    val pool = IndexedSeq.fill[ClassicElement](r)(Paper) ++
+      IndexedSeq.fill[ClassicElement](p)(Scissors) ++
+      IndexedSeq.fill[ClassicElement](s)(Rock)
     val total = pool.size
 
     pool(Random.nextInt(total))
@@ -47,17 +42,17 @@ trait AdvancedGameStrategy {
       (1, 1, 1)
     }
     else {
-      val totalR = this.humanActions.count(_ == RPSElement.rock).toDouble
-      val totalP = this.humanActions.count(_ == RPSElement.paper).toDouble
-      val totalS = this.humanActions.count(_ == RPSElement.scissors).toDouble
+      val totalR = this.humanActions.count(_ == Rock).toDouble
+      val totalP = this.humanActions.count(_ == Paper).toDouble
+      val totalS = this.humanActions.count(_ == Scissors).toDouble
       ((totalR / totalRounds * 100).toInt, (totalP / totalRounds * 100).toInt, (totalS / totalRounds * 100).toInt)
     }
   }
 }
 
 trait ClassicGameStrategy {
-  def getHand(): RPSElement = {
-    val elementValues = RPSElement.values.toIndexedSeq
+  def getHand(): ClassicElement = {
+    val elementValues = ClassicElementValues.values.toIndexedSeq
     elementValues(Random.nextInt(elementValues.size))
   }
 }

@@ -34,11 +34,11 @@ class ClassicGame(_m: Match) extends Game[ClassicElement](_m, new ClassicGameEng
    * @param humanElement
    * @return win/lose for the human player
    */
-  def computeGame(computerElement: RPSElement,
-                  humanElement: RPSElement): GameResult.GameResult = {
+  def computeGame(computerElement: ClassicElement,
+                  humanElement: ClassicElement): GameResult.GameResult = {
     val result = gameEngine.compare(
-      DomainConverter.toDomain(computerElement),
-      DomainConverter.toDomain(humanElement))
+      computerElement,
+      humanElement)
 
     if (result >= 0)
       GameResult.lose
@@ -49,7 +49,7 @@ class ClassicGame(_m: Match) extends Game[ClassicElement](_m, new ClassicGameEng
 
   def onHumanAction(action: GameAction): GameActionResponse = {
 
-    val humanHand = action.myHand
+    val humanHand = DomainConverter.toDomain(action.myHand)
     val computerHand = ComputerAI.getHand()
 
     val humanResult = computeGame(computerHand, humanHand)
@@ -59,8 +59,8 @@ class ClassicGame(_m: Match) extends Game[ClassicElement](_m, new ClassicGameEng
     ComputerAI.record(computerHand, humanHand)
 
     GameActionResponse(humanResult == GameResult.win,
-      formatMatchResult(computerHand,
-        humanHand, humanResult))
+      formatMatchResult(DomainConverter.toApi(computerHand),
+        DomainConverter.toApi(humanHand), humanResult))
 
   }
 

@@ -1,15 +1,14 @@
 package mydatamodels.rps.domain
 
-import mydatamodels.rps.interfaces.RPSElement.RPSElement
 
 import scala.collection.mutable
 
 trait PlayActionRecorder {
-  val humanActions = new mutable.Queue[RPSElement]
-  val computerActions = new mutable.Queue[RPSElement]
+  val humanActions = new mutable.Queue[ClassicElement]
+  val computerActions = new mutable.Queue[ClassicElement]
 
 
-  def record(computerElement: RPSElement, humanElement: RPSElement, roundIndex: Int = 0) = {
+  def record(computerElement: ClassicElement, humanElement: ClassicElement, roundIndex: Int = 0) = {
     humanActions += humanElement
     computerActions += computerElement
   }

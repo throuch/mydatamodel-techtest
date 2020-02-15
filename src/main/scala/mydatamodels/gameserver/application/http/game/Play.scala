@@ -2,18 +2,15 @@ package mydatamodels.gameserver.application.http.game
 
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.server.Directives
-import akka.http.scaladsl.server.Directives.{complete, entity, _}
-import akka.pattern.ask
 import mydatamodels.core.application.http.HttpCommon
 import mydatamodels.gameserver.interfaces.swagger.converter.JsonSupport
 import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
 //import org.json4s.DefaultFormats
-
 import scala.concurrent.Await
+import akka.pattern.ask
 
-case class Play(system: ActorSystem, gameactor: ActorRef) extends HttpCommon with GameAPI with JsonSupport {
+case class Play(system: ActorSystem, gameactor: ActorRef) extends HttpCommon with JsonSupport {
 
   implicit val requestFormat = jsonFormat1(GameAction)
   implicit val responseFormat = jsonFormat2(GameActionResponse)
@@ -21,7 +18,7 @@ case class Play(system: ActorSystem, gameactor: ActorRef) extends HttpCommon wit
   val route = play
 
 
-  override def play =
+  def play =
     path("play") {
       post {
         entity(as[GameAction]) { event =>
@@ -32,13 +29,9 @@ case class Play(system: ActorSystem, gameactor: ActorRef) extends HttpCommon wit
 
 
           complete(if (status.humanWins) StatusCodes.OK else StatusCodes.ImATeapot, status.message)
-
-
           //          complete {
           //            (gameactor ? event).mapTo[GameActionResponse]
           //          }
-
-
         }
       }
     }

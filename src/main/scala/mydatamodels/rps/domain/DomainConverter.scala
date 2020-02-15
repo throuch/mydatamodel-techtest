@@ -13,4 +13,15 @@ object DomainConverter {
     }
 
   }
+
+  def toApi(e: ClassicElement): RPSElement.RPSElement = {
+    e match {
+      case Rock ⇒ RPSElement.`rock`
+      case Scissors ⇒ RPSElement.`scissors`
+      case Paper ⇒ RPSElement.`paper`
+      case _ => throw new IllegalArgumentException
+    }
+
+
+  }
 }
