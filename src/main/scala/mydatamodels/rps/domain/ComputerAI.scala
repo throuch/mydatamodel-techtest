@@ -2,10 +2,6 @@ package mydatamodels.rps.domain
 
 import scala.util.Random
 
-object ComputerAI extends PlayActionRecorder with AdvancedGameStrategy {
-
-}
-
 
 trait RoundRobinStrategy {
   var idx = 0

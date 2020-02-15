@@ -22,7 +22,6 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
   implicit val responseFormat = jsonFormat2(GameActionResponse)
 
 
-
   implicit def myRejectionHandler =
     RejectionHandler.newBuilder()
       .handle {
