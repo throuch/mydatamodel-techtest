@@ -4,6 +4,7 @@ import akka.actor.ActorSystem
 import mydatamodels.core.application.service.CommonGameService
 import mydatamodels.core.interfaces.{GameConfiguration, MatchID}
 import mydatamodels.gameserver.application.http.GameHttpServer
+import mydatamodels.rps.application.actors.ClassicGameActor
 import mydatamodels.rps.domain.ClassicGame
 
 import scala.collection.mutable
@@ -14,7 +15,6 @@ trait GameLauncher {
   val games: mutable.Map[MatchID, ClassicGame] = mutable.HashMap[MatchID, ClassicGame]()
 
   implicit val system = ActorSystem("GameSystem")
-  implicit val executionContext = system.dispatcher
 
 
   def createRockPaperScissorsGame(config: GameConfiguration): MatchID = {
@@ -31,7 +31,9 @@ trait GameLauncher {
     if (!game._match.isMatchReadyToStart)
       throw new IllegalStateException
 
-    new GameHttpServer(game)
+    val gameActorRef = system.actorOf(ClassicGameActor.props(game), "GameActor")
+
+    new GameHttpServer(gameActorRef)
 
   }
 
