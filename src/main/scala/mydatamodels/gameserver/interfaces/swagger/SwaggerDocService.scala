@@ -25,14 +25,13 @@ object SwaggerDocService extends SwaggerHttpService {
     "Function1"
   )
 
-  //  val buildInfo = Buil
   override val info = Info(
     "Swagger Akka http Order microservice....",
     "0.1.0",
     "Rock-Paper-Scissors",
     termsOfService = "http://swagger.io/terms/",
     license = Some(License("Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0.html")),
-    contact = Some(Contact("Thomas ROUCH", "", "thomas.rouch.prestat@srr.fr"))
+    contact = Some(Contact("Thomas ROUCH", "", "thomas.rouch@thorn.consulting"))
 
   )
 }

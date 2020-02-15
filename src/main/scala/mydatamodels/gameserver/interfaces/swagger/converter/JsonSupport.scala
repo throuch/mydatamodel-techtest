@@ -40,5 +40,5 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   import MyJsonProtocol._
 
   implicit val element = enumFormat(RPSElement)
-  implicit val action = jsonFormat1(GameAction)
+
 }

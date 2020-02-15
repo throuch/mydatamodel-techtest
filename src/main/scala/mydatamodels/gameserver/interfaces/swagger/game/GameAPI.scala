@@ -2,10 +2,9 @@ package mydatamodels.gameserver.interfaces.swagger.game
 
 import akka.http.scaladsl.server.Route
 import io.swagger.annotations._
+import akka.http.scaladsl.server.Directives.complete
 import javax.ws.rs.Path
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
-import akka.http.scaladsl.server.Route
-import io.swagger.annotations._
 
 @Path("/")
 @Api(value = "GameAction")
@@ -31,12 +30,14 @@ trait GameAPI {
     )
   )
   @ApiResponses(Array(
-    new ApiResponse(code = 200, message = "You played <play>, I played <AI-play>, you <win/lose>"),
-    new ApiResponse(code = 418, message = "You played <play>, I played <AI-play>, you <win/lose>"),
-    new ApiResponse(code = 403, message = "if invalid input")
-  ))
-  def whatever: Option[Route] = None
-
+    new ApiResponse(code = 200, message = "You played <play>, I played <AI-play>, you <win/lose>" /*,
+      response = classOf[GameActionResponse]*/),
+    new ApiResponse(code = 418,
+      message = "You played <play>, I played <AI-play>, you <win/lose>" /*,
+      response = classOf[GameActionResponse]*/
+    ),
+    new ApiResponse(code = 403, message = "Invalid input, play [rock|paper|scissors]]")))
+  def play: Route = complete("empty")
 
   @Path("reset")
   @ApiOperation(
@@ -46,7 +47,7 @@ trait GameAPI {
   @ApiResponses(Array(
     new ApiResponse(code = 200, message = "OK"),
   ))
-  def whatever2: Option[Route] = None
+  def reset: Route = complete("empty")
 
   @Path("results")
   @ApiOperation(
@@ -57,6 +58,6 @@ trait GameAPI {
   @ApiResponses(Array(
     new ApiResponse(code = 200, message = "{\"player\": <number of win>, \"computer\": <number of win>}"),
   ))
-  def whatever3: Option[Route] = None
+  def results: Route = complete("empty")
 
 }

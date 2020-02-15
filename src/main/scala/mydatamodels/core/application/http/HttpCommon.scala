@@ -1,13 +1,13 @@
 package mydatamodels.core.application.http
 
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.server.Directives.complete
+import akka.http.scaladsl.server.Directives
 import akka.util.Timeout
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 
-trait HttpCommon {
+trait HttpCommon extends Directives {
 
   implicit val timeout = Timeout(5 seconds)
 

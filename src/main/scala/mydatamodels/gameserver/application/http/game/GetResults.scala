@@ -6,6 +6,7 @@ import akka.http.scaladsl.server.Directives._
 import mydatamodels.core.application.http.HttpCommon
 import mydatamodels.core.infrastructure.InMemoryMatchRecorder
 import mydatamodels.gameserver.application.injection.Module
+import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
 
 
 /**
@@ -14,10 +15,11 @@ import mydatamodels.gameserver.application.injection.Module
  *
  * @param system
  */
-case class GetResults(system: ActorSystem) extends HttpCommon {
+case class GetResults(system: ActorSystem) extends HttpCommon with GameAPI {
 
+  val route = results
 
-  val route =
+  override def results =
     get {
       pathPrefix("results") {
         pathEndOrSingleSlash {

@@ -26,10 +26,10 @@ updateOptions := updateOptions.value.withGigahorse(false).withCachedResolution(t
 
 
 val NexusRepository = Some("spawn.thorn.consulting")
-val author = "Thomas ROUCH <tomickx@msn.com>"
+val author = "Thomas ROUCH <thomas.rouch@thorn.consulting>"
 val exposedPort = 9000
 
-enablePlugins(sbtdocker.DockerPlugin, JavaAppPackaging, AshScriptPlugin)
+enablePlugins( JavaAppPackaging, AshScriptPlugin)
 
 // sbt-native-packager docker support (official)
 // Tasks: docker:stage docker:publishLocal docker:publish docker:clean
@@ -39,10 +39,10 @@ dockerExposedPorts        := Seq(exposedPort)
 dockerBaseImage           := "openjdk:8-jre-alpine"
 
 dockerAlias               := DockerAlias(
-          NexusRepository,
-          Option(organization.value),
-          packageName.value,
-          Option(generateDockerTag((ThisBuild / version).value)))
+                                NexusRepository,
+                                Option(organization.value),
+                                packageName.value,
+                                Option(generateDockerTag((ThisBuild / version).value)))
 maintainer in Docker      := author
 daemonUserUid in Docker   := None
 daemonUser in Docker      := "daemon"

@@ -11,6 +11,17 @@ object ComputerAI extends PlayActionRecorder with AdvancedGameStrategy {
 
 }
 
+
+trait RoundRobinStrategy {
+  var idx = 0
+
+  def getHand(): RPSElement = {
+    val elementValue = RPSElement.values.toIndexedSeq(idx)
+    idx = (idx + 1) % RPSElement.values.size
+    elementValue
+  }
+}
+
 /**
  * this strategy looks to all the hands of the human player and plays with more probability
  * the element beating the element most frequently played by the human
