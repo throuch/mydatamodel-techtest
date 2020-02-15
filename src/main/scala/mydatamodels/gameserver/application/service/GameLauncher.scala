@@ -28,7 +28,7 @@ trait GameLauncher {
   def start(matchID: MatchID): Unit = {
     val game = games.get(matchID).get
 
-    if (!game._match.isMatchReadyToStart)
+    if (!game.`match`.isMatchReadyToStart)
       throw new IllegalStateException
 
     val gameActorRef = system.actorOf(ClassicGameActor.props(game), "GameActor")

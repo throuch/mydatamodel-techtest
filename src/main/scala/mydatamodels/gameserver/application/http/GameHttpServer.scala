@@ -38,14 +38,12 @@ class GameHttpServer(game: ActorRef)(implicit val system: ActorSystem) extends S
 
   val route =
     cors()(
-
       Route.seal(
         SwaggerDocService.routes ~
           Play(system, game).route ~
           GetResults(system).route ~
           Reset(system).route ~
           site)
-
     )
 
   val port = sys.env("ADVERTISED_PORT").toShort

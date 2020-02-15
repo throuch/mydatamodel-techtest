@@ -9,6 +9,8 @@ import mydatamodels.core.interfaces._
 import scala.collection.mutable
 
 trait CommonGameService {
+
+  // TODO to be removed for STATELESS
   val matches: mutable.Map[MatchID, Match] = mutable.HashMap[MatchID, Match]()
   val players: mutable.Map[PlayerID, HumanPlayer] = mutable.HashMap[PlayerID, HumanPlayer]()
 

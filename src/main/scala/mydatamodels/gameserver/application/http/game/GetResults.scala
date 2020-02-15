@@ -2,11 +2,13 @@ package mydatamodels.gameserver.application.http.game
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.server.Directives._
 import mydatamodels.core.application.http.HttpCommon
-import mydatamodels.core.infrastructure.InMemoryMatchRecorder
+import mydatamodels.core.domain.repositories.ScoreRecord
+import mydatamodels.core.infrastructure.InMemoryMatchRepository
+import mydatamodels.gameserver.application.GameApp
 import mydatamodels.gameserver.application.injection.Module
 import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
+import mydatamodels.rps.infrastructure.InMemoryGameRecorder
 
 
 /**
@@ -24,7 +26,7 @@ case class GetResults(system: ActorSystem) extends HttpCommon with GameAPI {
       pathPrefix("results") {
         pathEndOrSingleSlash {
 
-          val (humanWins, computerWins) = Module.DefaultMatchRecorder.getRoundResults()
+          val ScoreRecord(_, humanWins, computerWins) = InMemoryMatchRepository.getScoreView(GameApp.matchID)
           val json = s"""{\"player\": ${humanWins}, \"computer\": ${computerWins}}"""
           completeJson(StatusCodes.OK, json)
 

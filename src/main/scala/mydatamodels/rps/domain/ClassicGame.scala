@@ -2,9 +2,10 @@ package mydatamodels.rps.domain
 
 import mydatamodels.core.domain.Game
 import mydatamodels.core.domain.entities.Match
-import mydatamodels.gameserver.application.injection.Module.DefaultMatchRecorder
+import mydatamodels.core.infrastructure.InMemoryMatchRepository
 import mydatamodels.gameserver.application.injection.Module.DefaultComputerAI
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
+import mydatamodels.rps.infrastructure.InMemoryGameRecorder
 import mydatamodels.rps.interfaces.RPSElement.RPSElement
 
 
@@ -51,15 +52,24 @@ class ClassicGame(_m: Match) extends Game[ClassicElement](_m, new ClassicGameEng
   def onHumanAction(action: GameAction): GameActionResponse = {
 
     val humanHand = DomainConverter.toDomain(action.myHand)
-    val computerHand = DefaultComputerAI.getHand()
+    val computerHand = DefaultComputerAI.getHand(`match`.id)
 
     val humanResult = computeGame(computerHand, humanHand)
+    val humanResultWin: Boolean = humanResult == GameResult.win
 
+    InMemoryGameRecorder.push(humanHand,
+      computerHand,
+      humanResultWin,
+      `match`.id)
 
-    DefaultMatchRecorder.recordRoundResult(humanResult == GameResult.win)
-    DefaultComputerAI.record(computerHand, humanHand)
+    if (humanResultWin) {
+      InMemoryMatchRepository.incrementHumanScore(`match`.id)
+    }
+    else {
+      InMemoryMatchRepository.incrementComputerScore(`match`.id)
+    }
 
-    GameActionResponse(humanResult == GameResult.win,
+    GameActionResponse(humanResultWin,
       formatMatchResult(DomainConverter.toApi(computerHand),
         DomainConverter.toApi(humanHand), humanResult))
 
