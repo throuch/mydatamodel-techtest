@@ -1,13 +1,9 @@
 package mydatamodels.gameserver.application.http.game
 
 import java.time.LocalDate
-
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.StatusCodes._
+import akka.http.scaladsl.server.Directives.complete
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.RawHeader
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{RejectionHandler, UnsupportedRequestContentTypeRejection, _}
+import akka.http.scaladsl.server._
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.util.ByteString
 import mydatamodels.core.domain.entities.{HumanPlayer, Match}
@@ -18,13 +14,26 @@ import mydatamodels.rps.domain.ClassicGame
 import mydatamodels.rps.interfaces.RPSElement
 import org.scalatest.{Matchers, WordSpec}
 import org.slf4j.LoggerFactory
-import spray.json.DefaultJsonProtocol
 
 
 class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with JsonSupport {
   val log = LoggerFactory.getLogger(getClass)
   implicit val requestFormat = jsonFormat1(GameAction)
   implicit val responseFormat = jsonFormat2(GameActionResponse)
+
+
+
+  implicit def myRejectionHandler =
+    RejectionHandler.newBuilder()
+      .handle {
+        case _ => {
+          complete(HttpResponse(StatusCodes.Forbidden, entity = "Invalid body !"))
+        }
+      }
+      .handleNotFound {
+        complete(HttpResponse(StatusCodes.InternalServerError))
+      }
+      .result()
 
   def postRequest(path: String, json: ByteString): HttpRequest =
     HttpRequest(HttpMethods.POST,
