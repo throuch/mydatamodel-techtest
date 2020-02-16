@@ -9,14 +9,18 @@ import mydatamodels.gameserver.interfaces.GameService
 trait BasicFeatures {
   self: GameService ⇒
 
-  lazy val matchID =
-    self.createRockPaperScissorsGame(GameConfiguration(Human, Computer))
+  var matchID = matchGen()
 
   lazy val playerID = self.createHumanPlayer("Thomas", LocalDate.parse("1977-05-30"))
   self.registerHumanPlayers(matchID, playerID)
+
+  private def matchGen(): MatchID = self.createRockPaperScissorsGame(GameConfiguration(Human, Computer))
 
   def getDefaultPlayer(): PlayerID = playerID
 
   def getDefaultMatch(): MatchID = matchID
 
+  def resetDefaultMatch() = {
+    matchID = matchGen()
+  }
 }

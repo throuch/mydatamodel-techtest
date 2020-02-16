@@ -21,7 +21,7 @@ import mydatamodels.rps.infrastructure.InMemoryGameRecorder
  *
  *
  */
-class GetResults /*(system: ActorSystem)*/ extends HttpCommon with GameAPI with JsonSupport {
+class GetResults extends HttpCommon with GameAPI with JsonSupport {
 
   case class ScoreResponse(player: Int, computer: Int)
 
@@ -34,7 +34,9 @@ class GetResults /*(system: ActorSystem)*/ extends HttpCommon with GameAPI with 
       pathPrefix("results") {
         pathEndOrSingleSlash {
 
-          val ScoreRecord(_, computerWins, humanWins) = Module.DefaultGameService.getScoreView(Module.DefaultGameService.getDefaultMatch())
+          val ScoreRecord(_, computerWins, humanWins) =
+            Module.DefaultGameService.getScoreView(
+              Module.DefaultGameService.getDefaultMatch())
           complete(StatusCodes.OK, ScoreResponse(humanWins, computerWins))
         }
       }

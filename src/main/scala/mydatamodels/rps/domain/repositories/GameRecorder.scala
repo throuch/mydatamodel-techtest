@@ -10,7 +10,6 @@ case class GameRecord(matchId: MatchID,
                       computerElement: ClassicElement,
                       humanWins: Boolean)
 
-//case class GameObjectValue(matchId: MatchID, )
 
 /**
  * Records the game events
