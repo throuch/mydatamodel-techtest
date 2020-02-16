@@ -8,6 +8,7 @@ import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionR
 
 import scala.concurrent.ExecutionContext
 import akka.pattern.ask
+import mydatamodels.gameserver.application.GameApp
 import mydatamodels.rps.interfaces.RPSElement
 
 class Play(system: ActorSystem, gameactor: ActorRef)(implicit executionContext: ExecutionContext) extends HttpCommon with JsonSupport {
@@ -24,7 +25,7 @@ class Play(system: ActorSystem, gameactor: ActorRef)(implicit executionContext: 
         entity(as[GameAction]) { event =>
 
           complete {
-            (gameactor ? event).mapTo[GameActionResponse].
+            (gameactor ? (GameApp.matchID, event)).mapTo[GameActionResponse].
               map(status ⇒ HttpResponse(if (status.humanWins) StatusCodes.OK else StatusCodes.ImATeapot,
                 entity = status.message))
           }

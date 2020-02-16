@@ -1,8 +1,8 @@
 package mydatamodels.rps.domain
 
+import mydatamodels.core.application.service.MatchService
 import mydatamodels.core.domain.Game
 import mydatamodels.core.domain.entities.Match
-import mydatamodels.core.infrastructure.InMemoryMatchRepository
 import mydatamodels.gameserver.application.injection.Module.DefaultComputerAI
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
 import mydatamodels.rps.infrastructure.InMemoryGameRecorder
@@ -10,11 +10,14 @@ import mydatamodels.rps.interfaces.RPSElement.RPSElement
 
 
 /**
+
+
+
  *
  *
  *
  **/
-class ClassicGame(_m: Match) extends Game[ClassicElement](_m, new ClassicGameEngine) {
+class ClassicGame(_m: Match, matchService: MatchService) extends Game[ClassicElement](_m, new ClassicGameEngine) {
 
 
   object GameResult extends Enumeration {
@@ -63,10 +66,10 @@ class ClassicGame(_m: Match) extends Game[ClassicElement](_m, new ClassicGameEng
       `match`.id)
 
     if (humanResultWin) {
-      InMemoryMatchRepository.incrementHumanScore(`match`.id)
+      matchService.incrementHumanScore(`match`.id)
     }
     else {
-      InMemoryMatchRepository.incrementComputerScore(`match`.id)
+      matchService.incrementComputerScore(`match`.id)
     }
 
     GameActionResponse(humanResultWin,

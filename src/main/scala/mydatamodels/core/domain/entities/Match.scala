@@ -15,10 +15,10 @@ import mydatamodels.core.interfaces.MatchID
  * @param roundCount
  */
 class Match(val id: MatchID = UUID.randomUUID(),
-            homeScore: Int = 0,
-            visitorScore: Int = 0,
+            val homeScore: Int = 0,
+            val visitorScore: Int = 0,
             roundCount: Short = 1,
-            expectHumanPlayersCount: Short) {
+            val expectHumanPlayersCount: Short) {
 
   private var homePlayer: Player = ComputerPlayer1
   private var visitorPlayer: Player = ComputerPlayer2

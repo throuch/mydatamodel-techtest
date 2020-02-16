@@ -1,14 +1,12 @@
 package mydatamodels.core.infrastructure
 
-import java.util.UUID
 
 import mydatamodels.core.domain.repositories.{MatchObjectValue, MatchRepository, ScoreRecord}
 import mydatamodels.core.interfaces.MatchID
 
 import scala.collection.mutable
 
-object InMemoryMatchRepository extends MatchRepository {
-  //val DEFAULT_MATCH_ID = UUID.randomUUID()
+trait InMemoryMatchRepository extends MatchRepository {
 
   val matchDb = mutable.HashMap[MatchID, MatchObjectValue]()
 
@@ -17,16 +15,6 @@ object InMemoryMatchRepository extends MatchRepository {
 
   //override def get(matchId: MatchID): Option[MatchObjectValue] = matchDb.get(matchId)
 
-  override def incrementHumanScore(matchId: MatchID): Unit = {
-    val prev = matchDb.getOrElseUpdate(matchId, MatchObjectValue(matchId))
-    matchDb += (matchId → prev.copy(humanScore = prev.humanScore + 1))
-  }
-
-  override def incrementComputerScore(matchId: MatchID): Unit = {
-    val prev = matchDb.getOrElseUpdate(matchId, MatchObjectValue(matchId))
-    matchDb += (matchId → prev.copy(computerScore = prev.computerScore + 1))
-  }
-
   // override def put(value: MatchObjectValue): Unit = matchDb + (value.matchId → value)
 
 
@@ -34,12 +22,12 @@ object InMemoryMatchRepository extends MatchRepository {
     matchDb.remove(matchId)
   }
 
-  override def getScoreView(matchId: MatchID): ScoreRecord = {
-    val r = matchDb.getOrElseUpdate(matchId, MatchObjectValue(matchId))
-    ScoreRecord(matchId, r.computerScore, r.humanScore)
-  }
 
-  override def getOrCreate(id: MatchID): MatchObjectValue =
-    matchDb.getOrElseUpdate(id, MatchObjectValue(id))
+  //  override def getOrCreate(id: MatchID): MatchObjectValue =
+  //    matchDb.getOrElseUpdate(id, MatchObjectValue(id))
+  override def get(matchId: MatchID): Option[MatchObjectValue] = matchDb.get(matchId)
 
+  override def put(matchId: MatchID, value: MatchObjectValue): Unit = matchDb.put(matchId, value)
+
+  override def exists(matchId: MatchID): Boolean = matchDb.contains(matchId)
 }

@@ -10,6 +10,7 @@ import akka.stream.ActorMaterializer
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import mydatamodels.core.application.http.common.Site
 import mydatamodels.gameserver.application.http.game.{GetResults, Play, Reset}
+import mydatamodels.gameserver.application.injection.Module
 import mydatamodels.gameserver.interfaces.swagger.SwaggerDocService
 import org.slf4j.LoggerFactory
 
@@ -41,7 +42,7 @@ class GameHttpServer(game: ActorRef)(implicit val system: ActorSystem) extends S
       Route.seal(
         SwaggerDocService.routes ~
           new Play(system, game).route ~
-          new GetResults(system).route ~
+          new GetResults(system, Module.DefaultGameService).route ~
           new Reset(system).route ~
           site)
     )

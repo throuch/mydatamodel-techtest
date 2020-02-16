@@ -3,6 +3,7 @@ package mydatamodels.gameserver.application.http.game
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import mydatamodels.core.application.http.HttpCommon
+import mydatamodels.core.application.service.MatchService
 import mydatamodels.core.domain.repositories.ScoreRecord
 import mydatamodels.core.infrastructure.InMemoryMatchRepository
 import mydatamodels.gameserver.application.GameApp
@@ -19,7 +20,7 @@ import mydatamodels.rps.infrastructure.InMemoryGameRecorder
  *
  * @param system
  */
-class GetResults(system: ActorSystem) extends HttpCommon with GameAPI with JsonSupport {
+class GetResults(system: ActorSystem, matchService: MatchService) extends HttpCommon with GameAPI with JsonSupport {
 
   case class ScoreResponse(player: Int, computer: Int)
 
@@ -32,7 +33,7 @@ class GetResults(system: ActorSystem) extends HttpCommon with GameAPI with JsonS
       pathPrefix("results") {
         pathEndOrSingleSlash {
 
-          val ScoreRecord(_, computerWins, humanWins) = InMemoryMatchRepository.getScoreView(GameApp.matchID)
+          val ScoreRecord(_, computerWins, humanWins) = matchService.getScoreView(GameApp.matchID)
           complete(StatusCodes.OK, ScoreResponse(humanWins, computerWins))
         }
       }

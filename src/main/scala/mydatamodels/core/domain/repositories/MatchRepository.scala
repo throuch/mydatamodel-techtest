@@ -1,13 +1,14 @@
 package mydatamodels.core.domain.repositories
 
-import java.util.UUID
-
-import mydatamodels.core.interfaces.MatchID
+import mydatamodels.core.interfaces.{MatchID, PlayerID}
 
 
 case class ScoreRecord(matchId: MatchID, computerScore: Int = 0, humanScore: Int = 0)
 
-case class MatchObjectValue(matchId: MatchID, computerScore: Int = 0, humanScore: Int = 0 /* to be completed */)
+case class MatchObjectValue(matchId: MatchID,
+                            computerScore: Int = 0,
+                            humanScore: Int = 0,
+                            humanPlayerId: PlayerID /* to be completed */)
 
 
 /**
@@ -18,25 +19,16 @@ case class MatchObjectValue(matchId: MatchID, computerScore: Int = 0, humanScore
  */
 trait MatchRepository {
 
+
   def count: Int
 
   def delete(matchId: MatchID): Unit
 
-  /*
+  // def getOrCreate(matchId: MatchID = UUID.randomUUID()): MatchObjectValue
+
   def get(matchId: MatchID): Option[MatchObjectValue]
 
-  def put(value: MatchObjectValue): Unit
-*/
+  def put(matchId: MatchID, value: MatchObjectValue): Unit
 
-  def incrementHumanScore(matchId: MatchID)
-
-  def incrementComputerScore(matchId: MatchID)
-
-
-  def getScoreView(matchId: MatchID): ScoreRecord
-
-  //def getAllScoreViews(matchId: MatchID): Seq[ScoreRecord]
-
-  def getOrCreate(matchId: MatchID = UUID.randomUUID()): MatchObjectValue
-
+  def exists(matchId: MatchID): Boolean
 }
