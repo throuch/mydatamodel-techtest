@@ -66,7 +66,7 @@ trait MatchService {
   def read(matchID: MatchID): Match = {
     get(matchID).map(m ⇒ {
 
-      val player = (players.getOrElse(m.humanPlayerId, throw new Exception(s"Player ${m.humanPlayerId} not found")))
+      val player = players.getOrElse(m.humanPlayerId, throw new Exception(s"Player ${m.humanPlayerId} not found"))
 
       val matchEntity = InfraConverter.toDomain(m)
       matchEntity.registerPlayerOne(player)
@@ -84,12 +84,9 @@ trait MatchService {
    * @return
    */
   def registerPlayer(matchID: MatchID, playerID: PlayerID) = {
-    get(matchID).foreach(m ⇒ {
+    val v = get(matchID).getOrElse(throw new Exception("NOT FOUND"))
 
-      m.copy(humanPlayerId = playerID)
-
-      put(matchID, m)
-    })
+    put(matchID, v.copy(humanPlayerId = playerID))
 
   }
 }

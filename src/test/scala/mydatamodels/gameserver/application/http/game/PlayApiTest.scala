@@ -8,6 +8,8 @@ import akka.http.scaladsl.server._
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.util.ByteString
 import mydatamodels.core.domain.entities.{HumanPlayer, Match}
+import mydatamodels.core.interfaces.GameConfiguration
+import mydatamodels.core.interfaces.PlayerType.{Computer, Human}
 import mydatamodels.gameserver.application.injection.Module.DefaultGameService
 import mydatamodels.gameserver.interfaces.swagger.converter.JsonSupport
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
@@ -44,11 +46,16 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
       entity = HttpEntity(MediaTypes.`application/json`, json)
     )
 
-  val game = new ClassicGame(
-    Match(
-      new HumanPlayer(pseudo = "Thomas",
-        birthDate = LocalDate.parse("1977-05-30"))), DefaultGameService)
-  val gameActorRef = system.actorOf(ClassicGameActor.props(), "GameActor")
+
+  val matchid = DefaultGameService.createRockPaperScissorsGame(new GameConfiguration(Human, Computer))
+  val playerid = DefaultGameService.createHumanPlayer(pseudo = "Thomas",
+    birthDate = LocalDate.parse("1977-05-30"))
+
+  DefaultGameService.registerPlayer(matchid, playerid)
+  //DefaultGameService.players.getOrElse(player.id, throw new Exception(s"Player ${player.id} not found"))
+
+
+  val gameActorRef = system.actorOf(ClassicGameActor.props(DefaultGameService), "GameActor")
   val play = new Play(system, gameActorRef)
 
 
@@ -57,7 +64,7 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
   "The service" should {
     "return 200 for POST requests to /play with proper entry" in {
 
-      Post("/play", GameAction(RPSElement.rock)) ~> smallroute ~> check {
+      Post("/play/" + matchid, GameAction(RPSElement.rock)) ~> smallroute ~> check {
 
 
         /* val response = responseAs[GameActionResponse]

@@ -15,7 +15,6 @@ trait GameLauncher {
   self: CommonGameService with MatchService =>
 
 
-
   def createRockPaperScissorsGame(config: GameConfiguration): MatchID = {
     create(config).id
   }
@@ -28,7 +27,7 @@ trait GameLauncher {
   def start(implicit system: ActorSystem): Unit = {
 
 
-    val gameActorRef = system.actorOf(ClassicGameActor.props(), "GameActor")
+    val gameActorRef = system.actorOf(ClassicGameActor.props(self), "GameActor")
 
     new GameHttpServer(gameActorRef)
 

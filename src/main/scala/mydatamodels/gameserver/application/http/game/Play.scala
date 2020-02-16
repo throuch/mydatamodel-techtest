@@ -20,17 +20,18 @@ class Play(system: ActorSystem, gameactor: ActorRef)(implicit executionContext: 
   val route = play
 
   def play =
-    path("play") {
-      post {
-        entity(as[GameAction]) { event =>
+    path("play" / JavaUUID) {
+      match_id ⇒
+        post {
+          entity(as[GameAction]) { event =>
 
-          complete {
-            (gameactor ? (GameApp.matchID, event)).mapTo[GameActionResponse].
-              map(status ⇒ HttpResponse(if (status.humanWins) StatusCodes.OK else StatusCodes.ImATeapot,
-                entity = status.message))
+            complete {
+              (gameactor ? (match_id, event)).mapTo[GameActionResponse].
+                map(status ⇒ HttpResponse(if (status.humanWins) StatusCodes.OK else StatusCodes.ImATeapot,
+                  entity = status.message))
+            }
           }
         }
-      }
     }
 }
 

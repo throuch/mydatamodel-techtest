@@ -10,11 +10,6 @@ import mydatamodels.rps.interfaces.RPSElement.RPSElement
 
 
 /**
-
-
-
- *
- *
  *
  **/
 class ClassicGame(_m: Match, matchService: MatchService) extends Game[ClassicElement](_m, new ClassicGameEngine) {

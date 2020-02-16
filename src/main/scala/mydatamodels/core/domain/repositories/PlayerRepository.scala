@@ -6,6 +6,5 @@ import mydatamodels.core.interfaces.PlayerID
 import scala.collection.mutable
 
 trait PlayerRepository {
-  val players: mutable.Map[PlayerID, HumanPlayer] = mutable.HashMap[PlayerID, HumanPlayer]()
-
+  val players: mutable.Map[PlayerID, HumanPlayer]
 }
