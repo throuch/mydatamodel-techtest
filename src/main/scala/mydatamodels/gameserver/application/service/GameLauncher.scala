@@ -12,10 +12,12 @@ import scala.collection.mutable
 
 trait GameLauncher {
   self: CommonGameService =>
+
+  // TODO use a game repository STATELESS
   val games: mutable.Map[MatchID, ClassicGame] = mutable.HashMap[MatchID, ClassicGame]()
 
   implicit val system = ActorSystem("GameSystem")
-
+  sys.addShutdownHook(system.terminate())
 
   def createRockPaperScissorsGame(config: GameConfiguration): MatchID = {
     val _match = createMatch(config)
@@ -24,7 +26,11 @@ trait GameLauncher {
     _match.id
   }
 
-
+  /**
+   * start a game and blocks until game server termination
+   *
+   * @param matchID
+   */
   def start(matchID: MatchID): Unit = {
     val game = games.get(matchID).get
 

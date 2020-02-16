@@ -1,5 +1,7 @@
 package mydatamodels.core.domain.repositories
 
+import java.util.UUID
+
 import mydatamodels.core.interfaces.MatchID
 
 
@@ -10,6 +12,9 @@ case class MatchObjectValue(matchId: MatchID, computerScore: Int = 0, humanScore
 
 /**
  * stores information about matches and scores in particular
+ *
+ * TODO think about what is about service and what is about pure repository
+ *
  */
 trait MatchRepository {
 
@@ -30,6 +35,8 @@ trait MatchRepository {
 
   def getScoreView(matchId: MatchID): ScoreRecord
 
-  //def getAllStoreViews(matchId: MatchID): Seq[ScoreRecord]
+  //def getAllScoreViews(matchId: MatchID): Seq[ScoreRecord]
+
+  def getOrCreate(matchId: MatchID = UUID.randomUUID()): MatchObjectValue
 
 }

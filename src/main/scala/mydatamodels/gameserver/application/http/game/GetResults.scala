@@ -7,7 +7,9 @@ import mydatamodels.core.domain.repositories.ScoreRecord
 import mydatamodels.core.infrastructure.InMemoryMatchRepository
 import mydatamodels.gameserver.application.GameApp
 import mydatamodels.gameserver.application.injection.Module
+import mydatamodels.gameserver.interfaces.swagger.converter.JsonSupport
 import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
+import mydatamodels.gameserver.interfaces.swagger.model.GameActionResponse
 import mydatamodels.rps.infrastructure.InMemoryGameRecorder
 
 
@@ -17,7 +19,11 @@ import mydatamodels.rps.infrastructure.InMemoryGameRecorder
  *
  * @param system
  */
-case class GetResults(system: ActorSystem) extends HttpCommon with GameAPI {
+class GetResults(system: ActorSystem) extends HttpCommon with GameAPI with JsonSupport {
+
+  case class ScoreResponse(player: Int, computer: Int)
+
+  implicit val responseFormat = jsonFormat2(ScoreResponse)
 
   val route = results
 
@@ -27,12 +33,8 @@ case class GetResults(system: ActorSystem) extends HttpCommon with GameAPI {
         pathEndOrSingleSlash {
 
           val ScoreRecord(_, computerWins, humanWins) = InMemoryMatchRepository.getScoreView(GameApp.matchID)
-          val json = s"""{\"player\": ${humanWins}, \"computer\": ${computerWins}}"""
-          completeJson(StatusCodes.OK, json)
-
+          complete(StatusCodes.OK, ScoreResponse(humanWins, computerWins))
         }
-
       }
-
     }
 }

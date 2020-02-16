@@ -38,4 +38,8 @@ object InMemoryMatchRepository extends MatchRepository {
     val r = matchDb.getOrElseUpdate(matchId, MatchObjectValue(matchId))
     ScoreRecord(matchId, r.computerScore, r.humanScore)
   }
+
+  override def getOrCreate(id: MatchID): MatchObjectValue =
+    matchDb.getOrElseUpdate(id, MatchObjectValue(id))
+
 }

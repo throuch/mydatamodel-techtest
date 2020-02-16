@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory
 
 class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with JsonSupport {
   val log = LoggerFactory.getLogger(getClass)
+
+  implicit val element = enumFormat(RPSElement)
   implicit val requestFormat = jsonFormat1(GameAction)
   implicit val responseFormat = jsonFormat2(GameActionResponse)
 
@@ -45,7 +47,7 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
       new HumanPlayer(pseudo = "Thomas",
         birthDate = LocalDate.parse("1977-05-30"))))
   val gameActorRef = system.actorOf(ClassicGameActor.props(game), "GameActor")
-  val play = Play(system, gameActorRef)
+  val play = new Play(system, gameActorRef)
 
 
   lazy val smallroute = Route.seal(play.route)

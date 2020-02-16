@@ -30,11 +30,11 @@ trait GameAPI {
     )
   )
   @ApiResponses(Array(
-    new ApiResponse(code = 200, message = "You played <play>, I played <AI-play>, you <win/lose>" /*,
-      response = classOf[GameActionResponse]*/),
+    new ApiResponse(code = 200, message = "You played <play>, I played <AI-play>, you <win/lose>"
+      /*, response = classOf[GameActionResponse]*/),
     new ApiResponse(code = 418,
-      message = "You played <play>, I played <AI-play>, you <win/lose>" /*,
-      response = classOf[GameActionResponse]*/
+      message = "You played <play>, I played <AI-play>, you <win/lose>"
+      /*,  response = classOf[GameActionResponse]*/
     ),
     new ApiResponse(code = 403, message = "Invalid input, play [rock|paper|scissors]]")))
   def play: Route = complete("empty")

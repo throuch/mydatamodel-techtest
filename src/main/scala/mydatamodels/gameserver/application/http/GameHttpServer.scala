@@ -40,9 +40,9 @@ class GameHttpServer(game: ActorRef)(implicit val system: ActorSystem) extends S
     cors()(
       Route.seal(
         SwaggerDocService.routes ~
-          Play(system, game).route ~
-          GetResults(system).route ~
-          Reset(system).route ~
+          new Play(system, game).route ~
+          new GetResults(system).route ~
+          new Reset(system).route ~
           site)
     )
 
