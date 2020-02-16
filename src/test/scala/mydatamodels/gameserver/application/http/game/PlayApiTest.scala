@@ -56,7 +56,7 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
 
 
   val gameActorRef = system.actorOf(ClassicGameActor.props(DefaultGameService), "GameActor")
-  val play = new Play(system, gameActorRef)
+  val play = new Play(gameActorRef)
 
 
   lazy val smallroute = Route.seal(play.route)

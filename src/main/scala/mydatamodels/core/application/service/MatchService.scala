@@ -1,13 +1,48 @@
 package mydatamodels.core.application.service
 
-import mydatamodels.core.domain.entities.Match
+import java.time.LocalDate
+
+import mydatamodels.core.domain.entities.{HumanPlayer, Match}
 import mydatamodels.core.domain.repositories.{MatchRepository, PlayerRepository, ScoreRecord}
 import mydatamodels.core.infrastructure.InfraConverter
 import mydatamodels.core.interfaces.{GameConfiguration, MatchID, PlayerID}
 import mydatamodels.core.interfaces.PlayerType._
 
 trait MatchService {
-  self: MatchRepository with PlayerRepository ⇒
+  self: MatchService with MatchRepository with PlayerRepository ⇒
+
+
+  /**
+   * register one or several human players to an existing match
+   *
+   * @param matchID
+   * @param playerID
+   * @exception UnsupportedOperationException if the supported number of players is wrong
+   * @exception IllegalArgumentException if the player doesn't exist
+   */
+  def registerHumanPlayers(matchID: MatchID, playerID: PlayerID*): Unit = {
+    if (playerID.size == 1) {
+      if (!players.contains(playerID(0)))
+        throw new IllegalArgumentException(s"Unknown player ID ${playerID(0)}")
+      if (!doesExists(matchID))
+        throw new IllegalArgumentException(s"Unknown match ID ${matchID}")
+
+      registerPlayer(matchID, playerID(0))
+
+    } else
+      throw new UnsupportedOperationException("2 humans players mode not yet supported")
+  }
+
+  /**
+   * create a new player
+   *
+   * @exception if the player is under 18 years
+   **/
+  def createHumanPlayer(pseudo: String, birthDate: LocalDate): PlayerID = {
+    val player = new HumanPlayer(pseudo = pseudo, birthDate = birthDate)
+    players.put(player.id, player)
+    player.id
+  }
 
   def getScoreView(matchId: MatchID): ScoreRecord = {
     get(matchId).map(prev ⇒
@@ -31,7 +66,7 @@ trait MatchService {
    * @param config the game configuration
    * @return a match
    */
-  def create(config: GameConfiguration): Match = {
+  def createGame(config: GameConfiguration): Match = {
     val `match` =
       if (((config.playerOne == Human) && (config.playerTwo == Computer)) ||
         ((config.playerOne == Computer) && (config.playerTwo == Human))
@@ -52,7 +87,7 @@ trait MatchService {
 
   /** store a match entity
    */
-  def register(m: Match): Unit = {
+  protected def register(m: Match): Unit = {
     put(m.id, InfraConverter.toInfra(m))
   }
 

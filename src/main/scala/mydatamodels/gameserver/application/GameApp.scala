@@ -16,12 +16,12 @@ object GameApp extends App {
   implicit val system = ActorSystem("GameSystem")
   sys.addShutdownHook(system.terminate())
 
-  val matchID =
-    DefaultGameService.createRockPaperScissorsGame(GameConfiguration(Human, Computer))
-
-  val playerID = DefaultGameService.createHumanPlayer("Thomas", LocalDate.parse("1977-05-30"))
-  DefaultGameService.registerHumanPlayers(matchID, playerID)
-
+  //  val matchID =
+  //    DefaultGameService.createRockPaperScissorsGame(GameConfiguration(Human, Computer))
+  //
+  //  val playerID = DefaultGameService.createHumanPlayer("Thomas", LocalDate.parse("1977-05-30"))
+  //  DefaultGameService.registerHumanPlayers(matchID, playerID)
+  //
 
   DefaultGameService.start
 

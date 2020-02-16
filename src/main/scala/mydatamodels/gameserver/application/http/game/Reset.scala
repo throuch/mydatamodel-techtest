@@ -9,9 +9,9 @@ import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
  *
  * Empty Implementation for now
  *
- * @param system
+ *
  */
-class Reset(system: ActorSystem) extends HttpCommon with GameAPI {
+class Reset extends HttpCommon with GameAPI {
 
   val route = reset
 
