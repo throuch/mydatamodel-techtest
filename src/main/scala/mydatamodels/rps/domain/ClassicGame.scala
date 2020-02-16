@@ -3,7 +3,7 @@ package mydatamodels.rps.domain
 import mydatamodels.core.application.service.MatchService
 import mydatamodels.core.domain.Game
 import mydatamodels.core.domain.entities.Match
-import mydatamodels.gameserver.application.injection.Module.DefaultComputerAI
+import mydatamodels.gameserver.application.injection.DefaultComputerAI
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
 import mydatamodels.rps.infrastructure.InMemoryGameRecorder
 import mydatamodels.rps.interfaces.RPSElement.RPSElement

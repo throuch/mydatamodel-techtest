@@ -4,6 +4,7 @@ import akka.actor.ActorSystem
 import mydatamodels.core.application.service.MatchService
 import mydatamodels.core.interfaces.{GameConfiguration, MatchID}
 import mydatamodels.gameserver.application.http.GameHttpServer
+import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.rps.application.actors.ClassicGameActor
 
 
@@ -15,18 +16,5 @@ trait GameLauncher {
     createGame(config).id
   }
 
-
-  /**
-   * start a game and blocks until game server termination
-   *
-   */
-  def start(implicit system: ActorSystem): Unit = {
-
-
-    val gameActorRef = system.actorOf(ClassicGameActor.props(self), "GameActor")
-
-    new GameHttpServer(gameActorRef)
-
-  }
 
 }

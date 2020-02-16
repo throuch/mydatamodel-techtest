@@ -3,7 +3,6 @@ package mydatamodels.rps.application.actors
 import akka.actor.{Actor, ActorLogging, Props}
 import mydatamodels.core.application.service.MatchService
 import mydatamodels.core.interfaces.MatchID
-import mydatamodels.gameserver.application.injection.Module
 import mydatamodels.gameserver.interfaces.swagger.model.GameAction
 import mydatamodels.rps.domain.ClassicGame
 

@@ -8,22 +8,20 @@ import mydatamodels.gameserver.interfaces.GameService
 import mydatamodels.rps.domain.AdvancedGameStrategy
 import mydatamodels.rps.infrastructure.InMemoryGameRecorder
 
-object Module {
+
+trait GameApplicationMixing extends
+  GameService with
+  MatchService with
+  InMemoryMatchRepository with
+
+  GameLauncher with
+  InMemoryPlayerRepository with
+  BasicFeatures
 
 
-  object DefaultGameService extends
-    GameService with
-    MatchService with
-    InMemoryMatchRepository with
-
-    GameLauncher with
-    InMemoryPlayerRepository with
-    BasicFeatures
+object DefaultComputerAI extends {
+  val repo = InMemoryGameRecorder
+} with AdvancedGameStrategy
 
 
-  object DefaultComputerAI extends {
-    val repo = InMemoryGameRecorder
-  } with AdvancedGameStrategy
 
-
-}

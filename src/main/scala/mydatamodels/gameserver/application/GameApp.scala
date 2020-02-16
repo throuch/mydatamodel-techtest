@@ -1,29 +1,20 @@
 package mydatamodels.gameserver.application
 
-import java.time.LocalDate
-
 import akka.actor.ActorSystem
-import mydatamodels.core.interfaces.GameConfiguration
-import mydatamodels.core.interfaces.PlayerType._
+import mydatamodels.gameserver.application.http.GameHttpServer
+import mydatamodels.gameserver.application.injection.GameApplicationMixing
+import mydatamodels.rps.application.actors.ClassicGameActor
 
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
-
-object GameApp extends App {
-
-  import injection.Module._
+object GameApp extends App with GameApplicationMixing {
 
   implicit val system = ActorSystem("GameSystem")
+  implicit val instance = this
+
   sys.addShutdownHook(system.terminate())
 
-  //  val matchID =
-  //    DefaultGameService.createRockPaperScissorsGame(GameConfiguration(Human, Computer))
-  //
-  //  val playerID = DefaultGameService.createHumanPlayer("Thomas", LocalDate.parse("1977-05-30"))
-  //  DefaultGameService.registerHumanPlayers(matchID, playerID)
-  //
+  val gameActorRef = system.actorOf(ClassicGameActor.props(instance), "GameActor")
 
-  DefaultGameService.start
+  new GameHttpServer(gameActorRef)
 
 
 }

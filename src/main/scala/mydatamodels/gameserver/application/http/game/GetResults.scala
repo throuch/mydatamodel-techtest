@@ -1,18 +1,11 @@
 package mydatamodels.gameserver.application.http.game
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import mydatamodels.core.application.http.HttpCommon
-import mydatamodels.core.application.service.MatchService
 import mydatamodels.core.domain.repositories.ScoreRecord
-import mydatamodels.core.infrastructure.InMemoryMatchRepository
-import mydatamodels.gameserver.application.GameApp
-import mydatamodels.gameserver.application.injection.Module
-import mydatamodels.gameserver.application.service.BasicFeatures
+import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.gameserver.interfaces.swagger.converter.JsonSupport
 import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
-import mydatamodels.gameserver.interfaces.swagger.model.GameActionResponse
-import mydatamodels.rps.infrastructure.InMemoryGameRecorder
 
 
 /**
@@ -21,7 +14,7 @@ import mydatamodels.rps.infrastructure.InMemoryGameRecorder
  *
  *
  */
-class GetResults extends HttpCommon with GameAPI with JsonSupport {
+class GetResults(implicit appContext: GameApplicationMixing) extends HttpCommon with GameAPI with JsonSupport {
 
   case class ScoreResponse(player: Int, computer: Int)
 
@@ -35,8 +28,8 @@ class GetResults extends HttpCommon with GameAPI with JsonSupport {
         pathEndOrSingleSlash {
 
           val ScoreRecord(_, computerWins, humanWins) =
-            Module.DefaultGameService.getScoreView(
-              Module.DefaultGameService.getDefaultMatch())
+            appContext.getScoreView(
+              appContext.getDefaultMatch())
           complete(StatusCodes.OK, ScoreResponse(humanWins, computerWins))
         }
       }

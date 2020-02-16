@@ -10,14 +10,14 @@ import akka.stream.ActorMaterializer
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import mydatamodels.core.application.http.common.Site
 import mydatamodels.gameserver.application.http.game.{GetResults, Play, Reset}
-import mydatamodels.gameserver.application.injection.Module
+import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.gameserver.interfaces.swagger.SwaggerDocService
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class GameHttpServer(game: ActorRef)(implicit val system: ActorSystem) extends Site {
+class GameHttpServer(game: ActorRef)(implicit system: ActorSystem, appContext: GameApplicationMixing) extends Site {
   val log = LoggerFactory.getLogger(getClass)
 
   implicit def myRejectionHandler =

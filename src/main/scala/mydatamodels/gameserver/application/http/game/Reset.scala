@@ -1,9 +1,8 @@
 package mydatamodels.gameserver.application.http.game
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import mydatamodels.core.application.http.HttpCommon
-import mydatamodels.gameserver.application.injection.Module
+import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
 
 /**
@@ -12,7 +11,7 @@ import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
  *
  *
  */
-class Reset extends HttpCommon with GameAPI {
+class Reset(implicit appContext: GameApplicationMixing) extends HttpCommon with GameAPI {
 
   val route = reset
 
@@ -21,7 +20,7 @@ class Reset extends HttpCommon with GameAPI {
       pathPrefix("reset") {
         pathEndOrSingleSlash {
 
-          Module.DefaultGameService.resetDefaultMatch()
+          appContext.resetDefaultMatch()
 
           complete(StatusCodes.OK)
 

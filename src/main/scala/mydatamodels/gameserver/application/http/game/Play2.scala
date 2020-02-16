@@ -4,7 +4,6 @@ import akka.actor.ActorRef
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.pattern.ask
 import mydatamodels.core.application.http.HttpCommon
-import mydatamodels.gameserver.application.injection.Module
 import mydatamodels.gameserver.interfaces.swagger.converter.JsonSupport
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
 import mydatamodels.rps.interfaces.RPSElement
@@ -26,7 +25,6 @@ class Play2(gameactor: ActorRef)(implicit val ec: ExecutionContext) extends Http
         post {
           entity(as[GameAction]) { event =>
 
-            val match_id = Module.DefaultGameService.getDefaultMatch() // STUB
             complete {
               (gameactor ? (match_id, event)).mapTo[GameActionResponse].
                 map(status ⇒ HttpResponse(if (status.humanWins) StatusCodes.OK else StatusCodes.ImATeapot,
