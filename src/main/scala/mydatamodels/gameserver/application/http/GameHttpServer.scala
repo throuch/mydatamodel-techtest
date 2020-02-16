@@ -5,10 +5,10 @@ package mydatamodels.gameserver.application.http
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
-import akka.http.scaladsl.server.{RejectionHandler, Route}
+import akka.http.scaladsl.server.{MalformedRequestContentRejection, RejectionHandler, Route}
 import akka.stream.ActorMaterializer
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
-import mydatamodels.core.application.http.common.Site
+import mydatamodels.core.application.http.common.{Ping, Site, Status}
 import mydatamodels.gameserver.application.http.game.{GetResults, Play, Reset}
 import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.gameserver.interfaces.swagger.SwaggerDocService
@@ -23,7 +23,7 @@ class GameHttpServer(game: ActorRef)(implicit system: ActorSystem, appContext: G
   implicit def myRejectionHandler =
     RejectionHandler.newBuilder()
       .handle {
-        case _ => {
+        case _: MalformedRequestContentRejection => {
           complete(HttpResponse(StatusCodes.Forbidden, entity = "Invalid body !"))
         }
       }
@@ -41,6 +41,8 @@ class GameHttpServer(game: ActorRef)(implicit system: ActorSystem, appContext: G
     cors()(
       Route.seal(
         SwaggerDocService.routes ~
+          new Ping().route ~
+          new Status().route ~
           new Play(game).route ~
           new GetResults().route ~
           new Reset().route ~

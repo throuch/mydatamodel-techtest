@@ -10,8 +10,7 @@ trait BasicFeatures {
   self: GameService ⇒
 
   var matchID = matchGen()
-
-  lazy val playerID = self.createHumanPlayer("Thomas", LocalDate.parse("1977-05-30"))
+  val playerID = self.createHumanPlayer("Default User", LocalDate.parse("1977-05-30"))
   self.registerHumanPlayers(matchID, playerID)
 
   private def matchGen(): MatchID = self.createRockPaperScissorsGame(GameConfiguration(Human, Computer))
