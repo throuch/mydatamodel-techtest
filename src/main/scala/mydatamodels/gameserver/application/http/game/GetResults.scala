@@ -29,7 +29,7 @@ class GetResults(implicit appContext: GameApplicationMixing) extends HttpCommon 
 
           val ScoreRecord(_, computerWins, humanWins) =
             appContext.getScoreView(
-              appContext.getDefaultMatch())
+              appContext.defaultMatchID)
           complete(StatusCodes.OK, ScoreResponse(humanWins, computerWins))
         }
       }

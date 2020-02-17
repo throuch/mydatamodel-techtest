@@ -36,8 +36,5 @@ trait GameService {
    **/
   def createHumanPlayer(pseudo: String, birthdate: LocalDate): PlayerID
 
-  //  def getRoundResult(matchId: MatchID, roundIndex: RoundIndex): RoundResult
-  //
-  //  def getMatchResult(matchId: MatchID): MatchResult
 
 }

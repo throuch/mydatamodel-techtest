@@ -10,7 +10,8 @@ import mydatamodels.rps.interfaces.RPSElement
 
 import scala.concurrent.ExecutionContext
 
-class Play2(gameactor: ActorRef)(implicit val ec: ExecutionContext) extends HttpCommon with JsonSupport {
+class Play2(gameactor: ActorRef)
+           (implicit val ec: ExecutionContext) extends HttpCommon with JsonSupport {
 
 
   implicit val element = enumFormat(RPSElement)
