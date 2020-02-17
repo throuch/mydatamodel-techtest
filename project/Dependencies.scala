@@ -20,7 +20,7 @@ object Dependencies {
     val akka_slf4j = "com.typesafe.akka" %% "akka-slf4j" % akka_version
     val akka_remote = "com.typesafe.akka" %% "akka-remote" % akka_version
     val akka_http = "com.typesafe.akka" %% "akka-http" % akka_http_version
-
+    val akka_cluster = "com.typesafe.akka" %% "akka-cluster" % akka_version
     val akka_testkit = "com.typesafe.akka" %% "akka-testkit" % akka_version
     val akka_http_testkit = "com.typesafe.akka" %% "akka-http-testkit" % akka_http_version
     val akka_http_spray_json = "com.typesafe.akka" %% "akka-http-spray-json" % akka_http_version
@@ -41,6 +41,7 @@ object Dependencies {
     akkaArtifacts.akka_actor,
     akkaArtifacts.akka_slf4j,
     akkaArtifacts.akka_remote,
+    akkaArtifacts.akka_cluster,
     akkaArtifacts.akka_http,
     akkaArtifacts.akka_http_spray_json,
     akkaArtifacts.akka_testkit % Test,
