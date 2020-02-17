@@ -8,7 +8,7 @@ import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.{RejectionHandler, Route}
 import akka.stream.ActorMaterializer
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
-import mydatamodels.core.application.http.common.Site
+import mydatamodels.core.application.http.common.{Ping, Site, Status}
 import mydatamodels.gameserver.application.http.game.{GetResults, Play, Reset}
 import mydatamodels.gameserver.interfaces.swagger.SwaggerDocService
 import org.slf4j.LoggerFactory
@@ -41,6 +41,8 @@ class GameHttpServer(game: ActorRef)(implicit val system: ActorSystem) extends S
 
       Route.seal(
         SwaggerDocService.routes ~
+          new Ping().route ~
+          new Status().route ~
           Play(system, game).route ~
           GetResults(system).route ~
           Reset(system).route ~
