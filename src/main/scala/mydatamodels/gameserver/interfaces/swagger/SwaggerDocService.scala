@@ -7,21 +7,18 @@ import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
 
 object SwaggerDocService extends SwaggerHttpService {
   val config = ConfigFactory.load()
-  val API_URL = s"${sys.env("ADVERTISED_HOST")}:${sys.env("ADVERTISED_PORT")}"
 
-  val BASE_PATH = config.getString("swagger.api.base.path")
-  val PROTOCOL = config.getString("swagger.api.scheme.protocol")
 
   override val apiClasses: Set[Class[_]] = Set(
     classOf[Ping],
     classOf[Status],
     classOf[GameAPI]
   )
-  override val host = API_URL //the url of your api, not swagger's json endpoint
-  override val apiDocsPath = "api-docs" //where you want the swagger-json endpoint exposed
-
+  override val host = config.getString("swagger.api.host") //the url of your api, not swagger's json endpoint
+  override val basePath = config.getString("swagger.api.base.path")
+  override val apiDocsPath = config.getString("swagger.api.doc.path")
   override val info = Info(
-    "Swagger Akka http Order microservice....",
+    "Swagger Akka http Rock-Paper-Scissors",
     "0.1.0",
     "Rock-Paper-Scissors",
     termsOfService = "http://swagger.io/terms/",

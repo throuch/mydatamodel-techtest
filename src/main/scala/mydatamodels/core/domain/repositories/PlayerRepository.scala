@@ -1,5 +1,10 @@
 package mydatamodels.core.domain.repositories
 
-trait PlayerRepository {
+import mydatamodels.core.domain.entities.HumanPlayer
+import mydatamodels.core.interfaces.PlayerID
 
+import scala.collection.mutable
+
+trait PlayerRepository {
+  val players: mutable.Map[PlayerID, HumanPlayer]
 }

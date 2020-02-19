@@ -11,12 +11,6 @@ import mydatamodels.core.interfaces._
  */
 trait GameService {
 
-  /**
-   * start the game
-   *
-   * @param
-   */
-  def start(matchID: MatchID): Unit
 
   /**
    * create a new Rock-Paper-Scissors game
@@ -42,8 +36,5 @@ trait GameService {
    **/
   def createHumanPlayer(pseudo: String, birthdate: LocalDate): PlayerID
 
-  def getRoundResult(matchId: MatchID, roundIndex: RoundIndex): RoundResult
-
-  def getMatchResult(matchId: MatchID): MatchResult
 
 }

@@ -1,33 +1,42 @@
 package mydatamodels.gameserver.application.http.game
 
-import java.time.LocalDate
-import akka.http.scaladsl.server.Directives.complete
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.server._
+import akka.http.scaladsl.server.Directives.{complete, _}
+import akka.http.scaladsl.server.{RejectionHandler, Route, _}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.util.ByteString
-import mydatamodels.core.domain.entities.{HumanPlayer, Match}
+import mydatamodels.core.interfaces.MatchID
+import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.gameserver.interfaces.swagger.converter.JsonSupport
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
 import mydatamodels.rps.application.actors.ClassicGameActor
-import mydatamodels.rps.domain.ClassicGame
+import mydatamodels.rps.domain.{AIStrategy, ClassicElement, Paper}
 import mydatamodels.rps.interfaces.RPSElement
 import org.scalatest.{Matchers, WordSpec}
 import org.slf4j.LoggerFactory
 
-
 class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with JsonSupport {
   val log = LoggerFactory.getLogger(getClass)
+
+  implicit val element = enumFormat(RPSElement)
   implicit val requestFormat = jsonFormat1(GameAction)
   implicit val responseFormat = jsonFormat2(GameActionResponse)
 
-
-  implicit def myRejectionHandler =
+  /*
+  implicit def myExceptionHandler: ExceptionHandler =
+    ExceptionHandler {
+      case e: Exception =>
+        e.printStackTrace()
+        complete(HttpResponse(StatusCodes.InternalServerError, entity = "Error in test writing"))
+    }
+*/
+  implicit val myRejectionHandler =
     RejectionHandler.newBuilder()
       .handle {
-        case _ => {
+        case _ =>
+
           complete(HttpResponse(StatusCodes.Forbidden, entity = "Invalid body !"))
-        }
+
       }
       .handleNotFound {
         complete(HttpResponse(StatusCodes.InternalServerError))
@@ -40,52 +49,54 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
       entity = HttpEntity(MediaTypes.`application/json`, json)
     )
 
-  val game = new ClassicGame(
-    Match(
-      new HumanPlayer(pseudo = "Thomas",
-        birthDate = LocalDate.parse("1977-05-30"))))
-  val gameActorRef = system.actorOf(ClassicGameActor.props(game), "GameActor")
-  val play = Play(system, gameActorRef)
+
+  implicit val instance = new GameApplicationMixing {
+
+    override val defaultGameStrategy: AIStrategy = new AIStrategy {
+      override def getHand(matchId: MatchID): ClassicElement = Paper
+    }
+  }
 
 
-  lazy val smallroute = Route.seal(play.route)
+  val gameActorRef = system.actorOf(ClassicGameActor.props(instance), "GameActor")
+  val play = new Play(gameActorRef)
+  val result = new GetResults()
+
+  val smallroute = Route.seal(
+    play.route ~
+      result.route)
 
   "The service" should {
-    "return 200 for POST requests to /play with proper entry" in {
+    "return 418 for POST requests to /play with rock" in {
 
       Post("/play", GameAction(RPSElement.rock)) ~> smallroute ~> check {
 
-
-        /* val response = responseAs[GameActionResponse]
-
-
-        status should ===(StatusCodes.OK)
-        log.info(response.toString)
-
-        (response match {
-          case GameActionResponse(_ , _) => true // TODO
-          case _ => false
-        }) shouldEqual true
-*/
-        status.intValue() should (equal(200) or equal(418))
-        log.info(response.toString)
-
-        //        val entity = responseAs[GameActionResponse]
-        //        entity.message should startWith("You played rock")
-
-        (response match {
-          case HttpResponse(_, _, entity, _) => {
-            log.info("DEBUG: " + entity.toString)
-
-            //    entity. should startWith ("You played rock")
-            true
-          } // TODO
-          case _ => false
-        }) shouldEqual true
+        status.intValue() should equal(418)
+        entityAs[String].startsWith("You played rock, I played paper") shouldEqual true
 
       }
+    }
+  }
 
+  "The service" should {
+    "return 200 for POST requests to /play with scissors" in {
 
+      Post("/play", GameAction(RPSElement.scissors)) ~> smallroute ~> check {
+
+        status.intValue() should equal(200)
+        entityAs[String].startsWith("You played scissors, I played paper") shouldEqual true
+      }
+    }
+  }
+
+  "The service" should {
+    "return 418 for POST requests to /play with paper" in {
+
+      Post("/play", GameAction(RPSElement.paper)) ~> smallroute ~> check {
+
+        status.intValue() should equal(418)
+        entityAs[String] shouldEqual "You played paper, I played paper, you lose"
+      }
     }
   }
 
@@ -102,4 +113,16 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
 
     }
   }
+
+  "The service" should {
+    "return ??? /results" in {
+
+      Get("/results") ~> smallroute ~> check {
+
+        log.info("TEST DEBUG: " + entityAs[String])
+        entityAs[String] shouldEqual """{"computer":2,"player":1}"""
+      }
+    }
+  }
+
 }
