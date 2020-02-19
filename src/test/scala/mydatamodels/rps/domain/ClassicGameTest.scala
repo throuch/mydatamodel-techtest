@@ -1,21 +1,22 @@
 package mydatamodels.rps.domain
 
+import java.time.LocalDate
+
+import mydatamodels.core.domain.entities.{HumanPlayer, Match}
 import mydatamodels.core.interfaces.MatchID
-import mydatamodels.gameserver.application.injection.GameApplicationMixing
-import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
 import mydatamodels.rps.infrastructure.InMemoryGameRecorder
-import mydatamodels.rps.interfaces.RPSElement
-import org.scalatest.{FlatSpec, Matchers, WordSpec}
+import org.scalatest.{FlatSpec, Matchers}
 
 
 class ClassicGameTest extends FlatSpec with Matchers {
 
   behavior of "ClassicGameTest"
 
-  implicit val instance = new GameApplicationMixing {
-  }
 
-  val _match = instance.read(instance.defaultMatchID)
+  val _match = new Match(expectHumanPlayersCount = 1).
+    withPlayerOne(new HumanPlayer(
+      pseudo = "DefaultUser",
+      birthDate = LocalDate.parse("1977-05-30"))) //instance.read(instance.defaultMatchID)
   val game = new ClassicGame(_match, InMemoryGameRecorder, new AIStrategy {
     override def getHand(matchId: MatchID): ClassicElement = {
       Scissors
@@ -57,11 +58,11 @@ class ClassicGameTest extends FlatSpec with Matchers {
 
 
   it should "computeGame" in {
-
+    cancel()
   }
 
   it should "formatMatchResult" in {
-
+    cancel()
   }
 
 }

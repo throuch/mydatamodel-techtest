@@ -10,11 +10,9 @@ import mydatamodels.rps.domain.repositories.GameRecorder
  **/
 class ClassicGame(_m: Match, gameRecorder: GameRecorder, ai: AIStrategy) extends Game[ClassicElement](_m, new ClassicGameEngine) {
 
-
   object GameResult extends Enumeration {
     type GameResult = Value
     val win, lose, draw = Value
-
   }
 
   def playRound(humanHand: ClassicElement) = {

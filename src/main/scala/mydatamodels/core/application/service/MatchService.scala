@@ -9,22 +9,22 @@ import mydatamodels.core.interfaces.PlayerType._
 import mydatamodels.core.interfaces.{GameConfiguration, MatchID, PlayerID}
 
 
-trait ReactiveMatch extends Match {
-  val service: MatchService
-
-  override def incrementVisitorScore(): Unit = {
-    super.incrementVisitorScore()
-    service.incrementHumanScore(id)
-  }
-
-  override def incrementHomeScore(): Unit = {
-    super.incrementHomeScore()
-    service.incrementComputerScore(id)
-  }
-}
-
 trait MatchService {
   self: MatchRepository with PlayerRepository ⇒
+
+  trait ReactiveMatch extends Match {
+    val service: MatchService
+
+    override def incrementVisitorScore(): Unit = {
+      super.incrementVisitorScore()
+      service.incrementHumanScore(id)
+    }
+
+    override def incrementHomeScore(): Unit = {
+      super.incrementHomeScore()
+      service.incrementComputerScore(id)
+    }
+  }
 
   /**
    * register one or several human players to an existing match
@@ -96,7 +96,7 @@ trait MatchService {
    * @param config the game configuration
    * @return a match
    */
-  def createGame(config: GameConfiguration): ReactiveMatch = {
+  def createGame(config: GameConfiguration): Match = {
     val `match` =
       if (((config.playerOne == Human) && (config.playerTwo == Computer)) ||
         ((config.playerOne == Computer) && (config.playerTwo == Human))
@@ -123,9 +123,8 @@ trait MatchService {
    * [CREATE]
    * store a match entity
    */
-  protected def store(m: ReactiveMatch): Unit = {
+  protected def store(m: Match): Unit =
     put(m.id, InfraConverter.toInfra(m))
-  }
 
 
   /**
@@ -133,7 +132,7 @@ trait MatchService {
    * get a match entity from the repository
    * retrieve human player
    */
-  def read(matchID: MatchID): ReactiveMatch =
+  def read(matchID: MatchID): Match =
     get(matchID).map(m ⇒
       toController(m, players.getOrElse(m.humanPlayerId, throw new Exception(s"Player ${m.humanPlayerId} not found")))
     ).getOrElse(throw new Exception(s"Match $matchID NOT FOUND"))
