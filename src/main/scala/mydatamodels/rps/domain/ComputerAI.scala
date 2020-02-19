@@ -5,11 +5,14 @@ import mydatamodels.rps.domain.repositories.GameRecorder
 
 import scala.util.Random
 
+trait AIStrategy {
+  def getHand(matchId: MatchID): ClassicElement
+}
 
-trait RoundRobinStrategy {
+trait RoundRobinStrategy extends AIStrategy {
   var idx = 0
 
-  def getHand(): ClassicElement = {
+  def getHand(matchId: MatchID): ClassicElement = {
     val elementValue = ClassicElementValues.values.toIndexedSeq(idx)
     idx = (idx + 1) % ClassicElementValues.values.size
     elementValue
@@ -20,7 +23,7 @@ trait RoundRobinStrategy {
  * this strategy looks to all the hands of the human player and plays with more probability
  * the element beating the element most frequently played by the human
  */
-trait AdvancedGameStrategy {
+trait AdvancedGameStrategy extends AIStrategy {
   val repo: GameRecorder
 
   def getHand(matchId: MatchID): ClassicElement = {
@@ -51,8 +54,8 @@ trait AdvancedGameStrategy {
   }
 }
 
-trait ClassicGameStrategy {
-  def getHand(): ClassicElement = {
+trait RandomGameStrategy extends AIStrategy {
+  def getHand(matchId: MatchID): ClassicElement = {
     val elementValues = ClassicElementValues.values.toIndexedSeq
     elementValues(Random.nextInt(elementValues.size))
   }

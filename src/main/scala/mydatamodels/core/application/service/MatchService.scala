@@ -3,14 +3,28 @@ package mydatamodels.core.application.service
 import java.time.LocalDate
 
 import mydatamodels.core.domain.entities.{HumanPlayer, Match}
-import mydatamodels.core.domain.repositories.{MatchRepository, PlayerRepository, ScoreRecord}
+import mydatamodels.core.domain.repositories.{MatchObjectValue, MatchRepository, PlayerRepository, ScoreRecord}
 import mydatamodels.core.infrastructure.InfraConverter
-import mydatamodels.core.interfaces.{GameConfiguration, MatchID, PlayerID}
 import mydatamodels.core.interfaces.PlayerType._
+import mydatamodels.core.interfaces.{GameConfiguration, MatchID, PlayerID}
+
+
+trait ReactiveMatch extends Match {
+  val service: MatchService
+
+  override def incrementVisitorScore(): Unit = {
+    super.incrementVisitorScore()
+    service.incrementHumanScore(id)
+  }
+
+  override def incrementHomeScore(): Unit = {
+    super.incrementHomeScore()
+    service.incrementComputerScore(id)
+  }
+}
 
 trait MatchService {
-  self: MatchService with MatchRepository with PlayerRepository ⇒
-
+  self: MatchRepository with PlayerRepository ⇒
 
   /**
    * register one or several human players to an existing match
@@ -24,10 +38,10 @@ trait MatchService {
     if (playerID.size == 1) {
       if (!players.contains(playerID(0)))
         throw new IllegalArgumentException(s"Unknown player ID ${playerID(0)}")
-      if (!doesExists(matchID))
+      if (!exists(matchID))
         throw new IllegalArgumentException(s"Unknown match ID ${matchID}")
 
-      registerPlayer(matchID, playerID(0))
+      updateMatchWithPlayers(matchID, playerID(0))
 
     } else
       throw new UnsupportedOperationException("2 humans players mode not yet supported")
@@ -44,84 +58,103 @@ trait MatchService {
     player.id
   }
 
+  /**
+   * [READ]
+   *
+   * @param matchId
+   * @return
+   */
   def getScoreView(matchId: MatchID): ScoreRecord = {
     get(matchId).map(prev ⇒
       ScoreRecord(matchId, prev.computerScore, prev.humanScore)).getOrElse(ScoreRecord(matchId, -1, -1))
   }
 
+  /**
+   * [UPDATE]
+   *
+   * @param matchId
+   */
   def incrementHumanScore(matchId: MatchID): Unit =
     get(matchId).foreach(prev ⇒
       put(matchId, prev.copy(humanScore = prev.humanScore + 1)))
 
+  /**
+   * [UPDATE]
+   *
+   * @param matchId
+   */
   def incrementComputerScore(matchId: MatchID): Unit =
     get(matchId).foreach(prev ⇒
       put(matchId, prev.copy(computerScore = prev.computerScore + 1)))
 
 
-  //def getAllScoreViews(matchId: MatchID): Seq[ScoreRecord]
-
   /**
+   *
+   * [CREATE]
    * Instanciate a new match and store it in the repository
    *
    * @param config the game configuration
    * @return a match
    */
-  def createGame(config: GameConfiguration): Match = {
+  def createGame(config: GameConfiguration): ReactiveMatch = {
     val `match` =
       if (((config.playerOne == Human) && (config.playerTwo == Computer)) ||
         ((config.playerOne == Computer) && (config.playerTwo == Human))
       ) {
-        new Match(roundCount = config.roundCount, expectHumanPlayersCount = 1)
+        new Match(expectHumanPlayersCount = 1) with ReactiveMatch {
+          override val service = self
+        }
       }
       else if ((config.playerOne == Computer) && (config.playerTwo == Computer)) {
-        new Match(roundCount = config.roundCount, expectHumanPlayersCount = 0)
+        new Match(expectHumanPlayersCount = 0) with ReactiveMatch {
+          override val service = self
+        }
       }
       else { // human Vs human
         throw new UnsupportedOperationException("2 humans players mode not yet supported")
         //new Match(roundCount = _config.roundCount, expectHumanPlayersCount = 2)
       }
 
-    register(`match`)
+    store(`match`)
     `match`
   }
 
-  /** store a match entity
+  /**
+   * [CREATE]
+   * store a match entity
    */
-  protected def register(m: Match): Unit = {
+  protected def store(m: ReactiveMatch): Unit = {
     put(m.id, InfraConverter.toInfra(m))
   }
 
-  def doesExists(matchId: MatchID): Boolean =
-  // this.asInstanceOf[MatchRepository].exists(matchId) /// ???? TODO
-    self.exists(matchId)
-
-  /** get a match entity from the repository
-   * retrieve players
-   */
-  def read(matchID: MatchID): Match = {
-    get(matchID).map(m ⇒ {
-
-      val player = players.getOrElse(m.humanPlayerId, throw new Exception(s"Player ${m.humanPlayerId} not found"))
-
-      val matchEntity = InfraConverter.toDomain(m)
-      matchEntity.registerPlayerOne(player)
-
-      matchEntity
-    }).getOrElse(throw new Exception(s"Match $matchID NOT FOUND"))
-
-  }
 
   /**
-   * Update operation
+   * [READ]
+   * get a match entity from the repository
+   * retrieve human player
+   */
+  def read(matchID: MatchID): ReactiveMatch =
+    get(matchID).map(m ⇒
+      toController(m, players.getOrElse(m.humanPlayerId, throw new Exception(s"Player ${m.humanPlayerId} not found")))
+    ).getOrElse(throw new Exception(s"Match $matchID NOT FOUND"))
+
+
+  /**
+   * [UPDATE]
    *
    * @param matchID
    * @param playerID
    * @return
    */
-  def registerPlayer(matchID: MatchID, playerID: PlayerID) = {
-    val v = get(matchID).getOrElse(throw new Exception("NOT FOUND"))
-
+  def updateMatchWithPlayers(matchID: MatchID, playerID: PlayerID) = {
+    val v = get(matchID).getOrElse(throw new Exception(s"Match $matchID NOT FOUND"))
     put(matchID, v.copy(humanPlayerId = playerID))
-
   }
+
+  private def toController(m: MatchObjectValue, playerOne: HumanPlayer): ReactiveMatch = {
+    new Match(m.matchId, m.computerScore, m.humanScore, 1) with ReactiveMatch {
+      override val service = self
+    }.withPlayerOne(playerOne)
+  }
+
 }

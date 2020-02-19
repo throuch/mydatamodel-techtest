@@ -5,7 +5,7 @@ import mydatamodels.core.application.service.MatchService
 import mydatamodels.core.infrastructure.{InMemoryMatchRepository, InMemoryPlayerRepository}
 import mydatamodels.gameserver.application.service.{BasicFeatures, GameLauncher}
 import mydatamodels.gameserver.interfaces.GameService
-import mydatamodels.rps.domain.AdvancedGameStrategy
+import mydatamodels.rps.domain.{AIStrategy, AdvancedGameStrategy, RandomGameStrategy}
 import mydatamodels.rps.infrastructure.InMemoryGameRecorder
 
 
@@ -16,12 +16,16 @@ trait GameApplicationMixing extends
 
   GameLauncher with
   InMemoryPlayerRepository with
+  ComputerAI with
   BasicFeatures
 
 
-object DefaultComputerAI extends {
-  val repo = InMemoryGameRecorder
-} with AdvancedGameStrategy
+trait ComputerAI {
+  val defaultGameStrategy: AIStrategy = new AdvancedGameStrategy {
+    val repo = InMemoryGameRecorder
+  }
+  val randomGameStrategy = new RandomGameStrategy {}
+}
 
 
 

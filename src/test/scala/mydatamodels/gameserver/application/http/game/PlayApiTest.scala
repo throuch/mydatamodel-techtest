@@ -1,6 +1,7 @@
 package mydatamodels.gameserver.application.http.game
 
 import java.time.LocalDate
+import java.util.UUID
 
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives.complete
@@ -25,13 +26,21 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
   implicit val requestFormat = jsonFormat1(GameAction)
   implicit val responseFormat = jsonFormat2(GameActionResponse)
 
-
-  implicit def myRejectionHandler =
+  /*
+  implicit def myExceptionHandler: ExceptionHandler =
+    ExceptionHandler {
+      case e: Exception =>
+        e.printStackTrace()
+        complete(HttpResponse(StatusCodes.InternalServerError, entity = "Error in test writing"))
+    }
+*/
+  implicit val myRejectionHandler =
     RejectionHandler.newBuilder()
       .handle {
-        case _ => {
+        case _ =>
+
           complete(HttpResponse(StatusCodes.Forbidden, entity = "Invalid body !"))
-        }
+
       }
       .handleNotFound {
         complete(HttpResponse(StatusCodes.InternalServerError))
@@ -46,12 +55,6 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
 
   implicit val instance = new GameApplicationMixing {}
 
-  val matchid = instance.createRockPaperScissorsGame(new GameConfiguration(Human, Computer))
-  val playerid = instance.createHumanPlayer(pseudo = "Thomas",
-    birthDate = LocalDate.parse("1977-05-30"))
-
-  instance.registerPlayer(matchid, playerid)
-  //instance.players.getOrElse(player.id, throw new Exception(s"Player ${player.id} not found"))
 
 
   val gameActorRef = system.actorOf(ClassicGameActor.props(instance), "GameActor")
@@ -63,20 +66,8 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
   "The service" should {
     "return 200 for POST requests to /play with proper entry" in {
 
-      Post("/play/" + matchid, GameAction(RPSElement.rock)) ~> smallroute ~> check {
+      Post("/play", GameAction(RPSElement.rock)) ~> smallroute ~> check {
 
-
-        /* val response = responseAs[GameActionResponse]
-
-
-        status should ===(StatusCodes.OK)
-        log.info(response.toString)
-
-        (response match {
-          case GameActionResponse(_ , _) => true // TODO
-          case _ => false
-        }) shouldEqual true
-*/
         status.intValue() should (equal(200) or equal(418))
         log.info(response.toString)
 
@@ -94,8 +85,6 @@ class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with Js
         }) shouldEqual true
 
       }
-
-
     }
   }
 
