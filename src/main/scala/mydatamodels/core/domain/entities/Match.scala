@@ -2,7 +2,6 @@ package mydatamodels.core.domain.entities
 
 import java.util.UUID
 
-import mydatamodels.core.application.service.MatchService
 import mydatamodels.core.domain.{ComputerPlayer1, ComputerPlayer2, Player}
 import mydatamodels.core.interfaces.MatchID
 

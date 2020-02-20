@@ -27,15 +27,15 @@ updateOptions := updateOptions.value.withGigahorse(false).withCachedResolution(t
 
 val NexusRepository = Some("spawn.thorn.consulting")
 val author = "Thomas ROUCH <thomas.rouch@thorn.consulting>"
-val exposedPort = 9000
+val exposedPort = Seq(9000,5559)
 
 enablePlugins( JavaAppPackaging, AshScriptPlugin)
 
 // sbt-native-packager docker support (official)
 // Tasks: docker:stage docker:publishLocal docker:publish docker:clean
-dockerEnvVars             := Map("ADVERTISED_HOSTNAME" -> "localhost", "ADVERTISED_PORT" -> exposedPort.toString)
+dockerEnvVars             := Map("ADVERTISED_HOST" -> "localhost", "ADVERTISED_PORT" -> exposedPort.toString)
 dockerUpdateLatest        := true
-dockerExposedPorts        := Seq(exposedPort)
+dockerExposedPorts        := exposedPort
 dockerBaseImage           := "openjdk:8-jre-alpine"
 
 dockerAlias               := DockerAlias(

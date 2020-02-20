@@ -57,12 +57,6 @@ class ClassicGameTest extends FlatSpec with Matchers {
   }
 
 
-  it should "computeGame" in {
-    cancel()
-  }
 
-  it should "formatMatchResult" in {
-    cancel()
-  }
 
 }

@@ -3,7 +3,7 @@
 The classic game Rock-Paper-Scissors
 
 #environment variables
-ADVERTISED_HOSTNAME=localhost
+ADVERTISED_HOST=localhost
 ADVERTISED_PORT=9000
 
 To run the program just enter on the command line:
