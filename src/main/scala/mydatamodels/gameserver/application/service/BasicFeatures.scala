@@ -7,7 +7,7 @@ import mydatamodels.core.interfaces.{GameConfiguration, MatchID, PlayerID}
 import mydatamodels.gameserver.interfaces.GameService
 
 trait BasicFeatures {
-  self: GameService ⇒
+  self: GameService =>
 
   var defaultMatchID: MatchID = createNewMatch()
   val defaultPlayerID = self.createHumanPlayer("Default User", LocalDate.parse("1977-05-30"))

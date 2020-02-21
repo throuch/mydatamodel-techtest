@@ -44,7 +44,7 @@ trait GameAPI {
   @ApiResponses(Array(
     new ApiResponse(code = 200, message = "OK"),
   ))
-  def reset: Route = complete("empty")
+  def reset: Route //= complete("empty")
 
   @Path("results")
   @ApiOperation(

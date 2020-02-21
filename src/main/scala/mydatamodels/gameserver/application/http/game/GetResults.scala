@@ -5,7 +5,6 @@ import mydatamodels.core.application.http.HttpCommon
 import mydatamodels.core.domain.repositories.ScoreRecord
 import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.gameserver.interfaces.swagger.converter.JsonSupport
-import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
 
 
 /**
@@ -14,7 +13,7 @@ import mydatamodels.gameserver.interfaces.swagger.game.GameAPI
  *
  *
  */
-class GetResults(implicit appContext: GameApplicationMixing) extends HttpCommon with GameAPI with JsonSupport {
+class GetResults(implicit appContext: GameApplicationMixing) extends HttpCommon with JsonSupport {
 
   case class ScoreResponse(player: Int, computer: Int)
 
@@ -22,7 +21,7 @@ class GetResults(implicit appContext: GameApplicationMixing) extends HttpCommon 
 
   val route = results
 
-  override def results =
+  def results =
     get {
       pathPrefix("results") {
         pathEndOrSingleSlash {

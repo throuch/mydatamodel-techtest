@@ -25,7 +25,7 @@ class ClassicGameActor(appContext: MatchService with ComputerAI) extends Actor w
   override def receive: Receive = {
     case (matchId: MatchID, body: GameAction) =>
       sender() ! onHumanAction(getGameReference(matchId), body)
-    case msg ⇒ log.warning(s"DEBUG: unrecognized message $msg")
+    case msg => log.warning(s"DEBUG: unrecognized message $msg")
   }
 
   def createClassicGame(matchId: MatchID): ClassicGame = {

@@ -8,7 +8,8 @@ import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.{MalformedRequestContentRejection, RejectionHandler, Route}
 import akka.stream.ActorMaterializer
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
-import mydatamodels.core.application.http.common.{Ping, Site, Status}
+import com.github.swagger.akka.SwaggerSite
+import mydatamodels.core.application.http.common.{Ping, Status}
 import mydatamodels.gameserver.application.http.game.{GetResults, Play, Reset}
 import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.gameserver.interfaces.swagger.SwaggerDocService
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class GameHttpServer(game: ActorRef)(implicit system: ActorSystem, appContext: GameApplicationMixing) extends Site {
+class GameHttpServer(game: ActorRef)(implicit system: ActorSystem, appContext: GameApplicationMixing) extends SwaggerSite {
   val log = LoggerFactory.getLogger(getClass)
 
   implicit def myRejectionHandler =
@@ -46,7 +47,7 @@ class GameHttpServer(game: ActorRef)(implicit system: ActorSystem, appContext: G
           new Play(game).route ~
           new GetResults().route ~
           new Reset().route ~
-          site)
+          swaggerSiteRoute)
     )
 
   val port = sys.env("ADVERTISED_PORT").toShort

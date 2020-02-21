@@ -2,7 +2,7 @@ package mydatamodels.gameserver.application.http.game
 
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives.{complete, _}
-import akka.http.scaladsl.server.{RejectionHandler, Route, _}
+import akka.http.scaladsl.server.{RejectionHandler, Route}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.util.ByteString
 import mydatamodels.core.interfaces.MatchID
@@ -12,10 +12,11 @@ import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionR
 import mydatamodels.rps.application.actors.ClassicGameActor
 import mydatamodels.rps.domain.{AIStrategy, ClassicElement, Paper}
 import mydatamodels.rps.interfaces.RPSElement
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.slf4j.LoggerFactory
 
-class PlayApiTest extends WordSpec with Matchers with ScalatestRouteTest with JsonSupport {
+class PlayApiTest extends AnyWordSpec with Matchers with ScalatestRouteTest with JsonSupport {
   val log = LoggerFactory.getLogger(getClass)
 
   implicit val element = enumFormat(RPSElement)

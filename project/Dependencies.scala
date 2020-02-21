@@ -4,9 +4,9 @@ import sbt._
 object Dependencies {
 
   lazy val commonDependencies = Seq(
-    "org.scalactic" %% "scalactic" % "3.0.5" % Test,
-    "org.scalatest" %% "scalatest" % "3.0.5" % Test,
-    // "org.json4s" %% "json4s-jackson" % "3.6.7",
+    "org.scalactic" %% "scalactic" % "3.1.0" % Test,
+    "org.scalatest" %% "scalatest" % "3.1.0" % Test,
+
     "ch.qos.logback" % "logback-classic" % "1.2.3",
     "ch.qos.logback" % "logback-core" % "1.2.3"
 
@@ -30,7 +30,7 @@ object Dependencies {
 
   lazy val swaggerDependencies = Seq(
     "com.github.swagger-akka-http" %% "swagger-akka-http" % "1.1.0",
-    "co.pragmati" %% "swagger-ui-akka-http" % "1.2.0",
+    "co.pragmati" %% "swagger-ui-akka-http" % "1.3.0",
     "ch.megard" %% "akka-http-cors" % "0.4.1",
     "io.swagger.core.v3" % "swagger-core" % "2.0.9",
     "io.swagger.core.v3" % "swagger-annotations" % "2.0.9",

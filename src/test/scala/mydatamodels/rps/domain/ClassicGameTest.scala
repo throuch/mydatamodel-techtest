@@ -5,10 +5,11 @@ import java.time.LocalDate
 import mydatamodels.core.domain.entities.{HumanPlayer, Match}
 import mydatamodels.core.interfaces.MatchID
 import mydatamodels.rps.infrastructure.InMemoryGameRecorder
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 
-class ClassicGameTest extends FlatSpec with Matchers {
+class ClassicGameTest extends AnyFlatSpec with Matchers {
 
   behavior of "ClassicGameTest"
 

@@ -10,7 +10,7 @@ import mydatamodels.core.interfaces.{GameConfiguration, MatchID, PlayerID}
 
 
 trait MatchService {
-  self: MatchRepository with PlayerRepository ⇒
+  self: MatchRepository with PlayerRepository =>
 
   trait ReactiveMatch extends Match {
     val service: MatchService
@@ -65,7 +65,7 @@ trait MatchService {
    * @return
    */
   def getScoreView(matchId: MatchID): ScoreRecord = {
-    get(matchId).map(prev ⇒
+    get(matchId).map(prev =>
       ScoreRecord(matchId, prev.computerScore, prev.humanScore)).getOrElse(ScoreRecord(matchId, -1, -1))
   }
 
@@ -75,7 +75,7 @@ trait MatchService {
    * @param matchId
    */
   def incrementHumanScore(matchId: MatchID): Unit =
-    get(matchId).foreach(prev ⇒
+    get(matchId).foreach(prev =>
       put(matchId, prev.copy(humanScore = prev.humanScore + 1)))
 
   /**
@@ -84,7 +84,7 @@ trait MatchService {
    * @param matchId
    */
   def incrementComputerScore(matchId: MatchID): Unit =
-    get(matchId).foreach(prev ⇒
+    get(matchId).foreach(prev =>
       put(matchId, prev.copy(computerScore = prev.computerScore + 1)))
 
 
@@ -133,7 +133,7 @@ trait MatchService {
    * retrieve human player
    */
   def read(matchID: MatchID): Match =
-    get(matchID).map(m ⇒
+    get(matchID).map(m =>
       toController(m, players.getOrElse(m.humanPlayerId, throw new Exception(s"Player ${m.humanPlayerId} not found")))
     ).getOrElse(throw new Exception(s"Match $matchID NOT FOUND"))
 

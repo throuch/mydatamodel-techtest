@@ -23,12 +23,12 @@ object InMemoryGameRecorder extends GameRecorder {
   }
 
   override def getGameRecords(matchId: MatchID): Seq[GameRecord] = {
-    actions.zipWithIndex.map(x ⇒ GameRecord(
+    actions.zipWithIndex.map(x => GameRecord(
       matchId,
       x._2,
       x._1._1,
       x._1._2,
       x._1._3
     )).sortBy(_.roundIndex)
-  }
+    }.toSeq
 }

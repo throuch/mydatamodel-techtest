@@ -22,13 +22,13 @@ class Play2(gameactor: ActorRef)
 
   def play =
     path("play" / JavaUUID) {
-      match_id ⇒
+      match_id =>
         post {
           entity(as[GameAction]) { event =>
 
             complete {
               (gameactor ? (match_id, event)).mapTo[GameActionResponse].
-                map(status ⇒ HttpResponse(if (status.humanWins) StatusCodes.OK else StatusCodes.ImATeapot,
+                map(status => HttpResponse(if (status.humanWins) StatusCodes.OK else StatusCodes.ImATeapot,
                   entity = status.message))
             }
           }
