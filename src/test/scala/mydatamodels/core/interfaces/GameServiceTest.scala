@@ -1,8 +1,9 @@
 package mydatamodels.core.interfaces
 
-import org.scalatest.FunSuite
 
-class GameServiceTest extends FunSuite {
+import org.scalatest.funsuite.AnyFunSuite
+
+class GameServiceTest extends AnyFunSuite {
 
   test("testCreateRockPaperScissorsGame") {
     cancel("test not implemented")

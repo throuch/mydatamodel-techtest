@@ -10,7 +10,9 @@ import mydatamodels.core.interfaces.{GameConfiguration, MatchID, PlayerID}
 
 
 trait MatchService {
-  self: MatchRepository with PlayerRepository =>
+  self =>
+  val matchRepo: MatchRepository
+  val playerRepo: PlayerRepository
 
   trait ReactiveMatch extends Match {
     val service: MatchService
@@ -36,9 +38,9 @@ trait MatchService {
    */
   def registerHumanPlayers(matchID: MatchID, playerID: PlayerID*): Unit = {
     if (playerID.size == 1) {
-      if (!players.contains(playerID(0)))
+      if (!playerRepo.players.contains(playerID(0)))
         throw new IllegalArgumentException(s"Unknown player ID ${playerID(0)}")
-      if (!exists(matchID))
+      if (!matchRepo.exists(matchID))
         throw new IllegalArgumentException(s"Unknown match ID ${matchID}")
 
       updateMatchWithPlayers(matchID, playerID(0))
@@ -54,7 +56,7 @@ trait MatchService {
    **/
   def createHumanPlayer(pseudo: String, birthDate: LocalDate): PlayerID = {
     val player = new HumanPlayer(pseudo = pseudo, birthDate = birthDate)
-    players.put(player.id, player)
+    playerRepo.players.put(player.id, player)
     player.id
   }
 
@@ -65,7 +67,7 @@ trait MatchService {
    * @return
    */
   def getScoreView(matchId: MatchID): ScoreRecord = {
-    get(matchId).map(prev =>
+    matchRepo.get(matchId).map(prev =>
       ScoreRecord(matchId, prev.computerScore, prev.humanScore)).getOrElse(ScoreRecord(matchId, -1, -1))
   }
 
@@ -75,8 +77,8 @@ trait MatchService {
    * @param matchId
    */
   def incrementHumanScore(matchId: MatchID): Unit =
-    get(matchId).foreach(prev =>
-      put(matchId, prev.copy(humanScore = prev.humanScore + 1)))
+    matchRepo.get(matchId).foreach(prev =>
+      matchRepo.put(matchId, prev.copy(humanScore = prev.humanScore + 1)))
 
   /**
    * [UPDATE]
@@ -84,8 +86,8 @@ trait MatchService {
    * @param matchId
    */
   def incrementComputerScore(matchId: MatchID): Unit =
-    get(matchId).foreach(prev =>
-      put(matchId, prev.copy(computerScore = prev.computerScore + 1)))
+    matchRepo.get(matchId).foreach(prev =>
+      matchRepo.put(matchId, prev.copy(computerScore = prev.computerScore + 1)))
 
 
   /**
@@ -124,7 +126,7 @@ trait MatchService {
    * store a match entity
    */
   protected def store(m: Match): Unit =
-    put(m.id, InfraConverter.toInfra(m))
+    matchRepo.put(m.id, InfraConverter.toInfra(m))
 
 
   /**
@@ -133,8 +135,8 @@ trait MatchService {
    * retrieve human player
    */
   def read(matchID: MatchID): Match =
-    get(matchID).map(m =>
-      toController(m, players.getOrElse(m.humanPlayerId, throw new Exception(s"Player ${m.humanPlayerId} not found")))
+    matchRepo.get(matchID).map(m =>
+      toController(m, playerRepo.players.getOrElse(m.humanPlayerId, throw new Exception(s"Player ${m.humanPlayerId} not found")))
     ).getOrElse(throw new Exception(s"Match $matchID NOT FOUND"))
 
 
@@ -146,8 +148,8 @@ trait MatchService {
    * @return
    */
   def updateMatchWithPlayers(matchID: MatchID, playerID: PlayerID) = {
-    val v = get(matchID).getOrElse(throw new Exception(s"Match $matchID NOT FOUND"))
-    put(matchID, v.copy(humanPlayerId = playerID))
+    val v = matchRepo.get(matchID).getOrElse(throw new Exception(s"Match $matchID NOT FOUND"))
+    matchRepo.put(matchID, v.copy(humanPlayerId = playerID))
   }
 
   private def toController(m: MatchObjectValue, playerOne: HumanPlayer): ReactiveMatch = {

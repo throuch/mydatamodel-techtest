@@ -58,6 +58,4 @@ class ClassicGameTest extends AnyFlatSpec with Matchers {
   }
 
 
-
-
 }

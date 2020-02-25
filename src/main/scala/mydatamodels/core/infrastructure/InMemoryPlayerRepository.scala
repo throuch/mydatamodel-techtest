@@ -6,7 +6,7 @@ import mydatamodels.core.interfaces.PlayerID
 
 import scala.collection.mutable
 
-trait InMemoryPlayerRepository extends PlayerRepository {
+object inMemoryPlayerRepository extends PlayerRepository {
   final val players: mutable.Map[PlayerID, HumanPlayer] = mutable.HashMap[PlayerID, HumanPlayer]()
 
 

@@ -6,7 +6,7 @@ import mydatamodels.core.interfaces.MatchID
 
 import scala.collection.mutable
 
-trait InMemoryMatchRepository extends MatchRepository {
+object inMemoryMatchRepository extends MatchRepository {
 
   val matchDb = mutable.HashMap[MatchID, MatchObjectValue]()
 

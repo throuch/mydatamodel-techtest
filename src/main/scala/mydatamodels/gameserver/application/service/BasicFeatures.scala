@@ -3,7 +3,7 @@ package mydatamodels.gameserver.application.service
 import java.time.LocalDate
 
 import mydatamodels.core.interfaces.PlayerType.{Computer, Human}
-import mydatamodels.core.interfaces.{GameConfiguration, MatchID, PlayerID}
+import mydatamodels.core.interfaces.{GameConfiguration, MatchID}
 import mydatamodels.gameserver.interfaces.GameService
 
 trait BasicFeatures {

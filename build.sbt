@@ -21,10 +21,10 @@ lazy val root = (project in file("."))
 
 scalacOptions ++= List(
   "-encoding",  "utf8",
-  "-explaintypes",
+// "-explaintypes",
   "-feature",
   "-deprecation",
-  "-unchecked",
+//  "-unchecked",
   "-Xlint",
   "-Yrangepos",
   "-Ywarn-dead-code",

@@ -30,5 +30,5 @@ object InMemoryGameRecorder extends GameRecorder {
       x._1._2,
       x._1._3
     )).sortBy(_.roundIndex)
-    }.toSeq
+  }.toSeq
 }
