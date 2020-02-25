@@ -28,7 +28,6 @@ scalacOptions ++= List(
   "-Xlint",
   "-Yrangepos",
   "-Ywarn-dead-code",
-  "-Ywarn-numeric-widen",
   "-Ywarn-unused",
   "-language:postfixOps"
 )
