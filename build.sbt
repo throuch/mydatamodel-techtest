@@ -3,7 +3,7 @@ import sbt._
 import Utils.generateDockerTag
 import sbt.Keys.resolvers
 
-ThisBuild / scalaVersion     := "2.12.10"
+ThisBuild / scalaVersion     := "2.13.1"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
 ThisBuild / organization     := "com.mydatamodels"
 ThisBuild / organizationName := "MyDataModels"
@@ -18,6 +18,19 @@ lazy val root = (project in file("."))
     )
 
   )
+
+scalacOptions ++= List(
+  "-encoding",  "utf8",
+  "-explaintypes",
+  "-feature",
+  "-deprecation",
+  "-unchecked",
+  "-Xlint",
+  "-Yrangepos",
+  "-Ywarn-dead-code",
+  "-Ywarn-unused",
+  "-language:postfixOps"
+)
 
 // See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.
 

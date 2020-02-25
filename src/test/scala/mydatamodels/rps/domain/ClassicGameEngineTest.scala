@@ -1,8 +1,11 @@
 package mydatamodels.rps.domain
 
-import org.scalatest.{FlatSpec, Matchers}
 
-class ClassicGameEngineTest extends FlatSpec with Matchers {
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+
+
+class ClassicGameEngineTest extends AnyFlatSpec with Matchers {
   val gameEngine = new ClassicGameEngine()
 
   behavior of "ClassicGameEngineTest"
