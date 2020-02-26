@@ -24,7 +24,7 @@ scalacOptions ++= List(
 // "-explaintypes",
   "-feature",
   "-deprecation",
-//  "-unchecked",
+  "-unchecked",
   "-Xlint",
   "-Yrangepos",
   "-Ywarn-dead-code",

@@ -1,11 +1,14 @@
 package mydatamodels.gameserver.application.http.game
 
+import java.time.LocalDate
+
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives.{complete, _}
 import akka.http.scaladsl.server.{RejectionHandler, Route}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.util.ByteString
-import mydatamodels.core.interfaces.MatchID
+import mydatamodels.core.interfaces.PlayerType._
+import mydatamodels.core.interfaces.{GameConfiguration, MatchID}
 import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.gameserver.interfaces.swagger.converter.JsonSupport
 import mydatamodels.gameserver.interfaces.swagger.model.{GameAction, GameActionResponse}
@@ -60,8 +63,13 @@ class PlayApiTest extends AnyWordSpec with Matchers with ScalatestRouteTest with
 
 
   val gameActorRef = system.actorOf(ClassicGameActor.props(instance), "GameActor")
-  val play = new Play(gameActorRef)
-  val result = new GetResults()
+
+  val defaultMatchID = instance.createRockPaperScissorsGame(GameConfiguration(Human, Computer))
+  val defaultPlayerID = instance.createHumanPlayer("Default User", LocalDate.parse("1977-05-30"))
+  instance.registerHumanPlayers(defaultMatchID, defaultPlayerID)
+
+  val play = new Play2(gameActorRef)
+  val result = new GetResults2()
 
   val smallroute = Route.seal(
     play.route ~
@@ -70,7 +78,7 @@ class PlayApiTest extends AnyWordSpec with Matchers with ScalatestRouteTest with
   "The service" should {
     "return 418 for POST requests to /play with rock" in {
 
-      Post("/play", GameAction(RPSElement.rock)) ~> smallroute ~> check {
+      Post("/play/" + defaultMatchID, GameAction(RPSElement.rock)) ~> smallroute ~> check {
 
         status.intValue() should equal(418)
         entityAs[String].startsWith("You played rock, I played paper") shouldEqual true
@@ -82,7 +90,7 @@ class PlayApiTest extends AnyWordSpec with Matchers with ScalatestRouteTest with
   "The service" should {
     "return 200 for POST requests to /play with scissors" in {
 
-      Post("/play", GameAction(RPSElement.scissors)) ~> smallroute ~> check {
+      Post("/play/" + defaultMatchID, GameAction(RPSElement.scissors)) ~> smallroute ~> check {
 
         status.intValue() should equal(200)
         entityAs[String].startsWith("You played scissors, I played paper") shouldEqual true
@@ -93,7 +101,7 @@ class PlayApiTest extends AnyWordSpec with Matchers with ScalatestRouteTest with
   "The service" should {
     "return 418 for POST requests to /play with paper" in {
 
-      Post("/play", GameAction(RPSElement.paper)) ~> smallroute ~> check {
+      Post("/play/" + defaultMatchID, GameAction(RPSElement.paper)) ~> smallroute ~> check {
 
         status.intValue() should equal(418)
         entityAs[String] shouldEqual "You played paper, I played paper, you lose"
@@ -104,7 +112,7 @@ class PlayApiTest extends AnyWordSpec with Matchers with ScalatestRouteTest with
 
   "The service" should {
     "return 403 for POST requests to /play with incorrect hand value" in {
-      postRequest("/play", ByteString("""{ "myHand" : "crap" }""")) ~> smallroute ~> check {
+      postRequest("/play/" + defaultMatchID, ByteString("""{ "myHand" : "crap" }""")) ~> smallroute ~> check {
 
         status should ===(StatusCodes.Forbidden)
         log.info(response.toString)
@@ -118,7 +126,7 @@ class PlayApiTest extends AnyWordSpec with Matchers with ScalatestRouteTest with
   "The service" should {
     "return ??? /results" in {
 
-      Get("/results") ~> smallroute ~> check {
+      Get("/results/" + defaultMatchID) ~> smallroute ~> check {
 
         log.info("TEST DEBUG: " + entityAs[String])
         entityAs[String] shouldEqual """{"computer":2,"player":1}"""

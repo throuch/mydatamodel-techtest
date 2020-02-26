@@ -8,6 +8,4 @@ import scala.collection.mutable
 
 object inMemoryPlayerRepository extends PlayerRepository {
   final val players: mutable.Map[PlayerID, HumanPlayer] = mutable.HashMap[PlayerID, HumanPlayer]()
-
-
 }

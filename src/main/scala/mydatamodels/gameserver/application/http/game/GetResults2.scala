@@ -13,7 +13,7 @@ import mydatamodels.gameserver.interfaces.swagger.converter.JsonSupport
  *
  *
  */
-class GetResults(implicit appContext: GameApplicationMixing) extends HttpCommon with JsonSupport {
+class GetResults2(implicit appContext: GameApplicationMixing) extends HttpCommon with JsonSupport {
 
   case class ScoreResponse(player: Int, computer: Int)
 
@@ -22,15 +22,14 @@ class GetResults(implicit appContext: GameApplicationMixing) extends HttpCommon 
   val route = results
 
   def results =
-    get {
-      pathPrefix("results") {
-        pathEndOrSingleSlash {
-
+    path("results" / JavaUUID) {
+      match_id =>
+        get {
           val ScoreRecord(_, computerWins, humanWins) =
-            appContext.getScoreView(
-              appContext.defaultMatchID)
+            appContext.getScoreView(match_id)
           complete(StatusCodes.OK, ScoreResponse(humanWins, computerWins))
+
         }
-      }
+
     }
 }

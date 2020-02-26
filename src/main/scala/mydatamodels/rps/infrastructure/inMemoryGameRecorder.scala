@@ -9,7 +9,7 @@ import scala.collection.mutable
 /**
  * For the moment don't take matchId and roundindex into account
  */
-object InMemoryGameRecorder extends GameRecorder {
+object inMemoryGameRecorder extends GameRecorder {
   val actions = new mutable.Queue[(ClassicElement, ClassicElement, Boolean)]
 
   override def count(matchId: MatchID): Int = actions.size

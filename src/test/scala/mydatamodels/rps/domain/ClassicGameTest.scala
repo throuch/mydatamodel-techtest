@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 import mydatamodels.core.domain.entities.{HumanPlayer, Match}
 import mydatamodels.core.interfaces.MatchID
-import mydatamodels.rps.infrastructure.InMemoryGameRecorder
+import mydatamodels.rps.infrastructure.inMemoryGameRecorder
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -18,7 +18,7 @@ class ClassicGameTest extends AnyFlatSpec with Matchers {
     withPlayerOne(new HumanPlayer(
       pseudo = "DefaultUser",
       birthDate = LocalDate.parse("1977-05-30"))) //instance.read(instance.defaultMatchID)
-  val game = new ClassicGame(_match, InMemoryGameRecorder, new AIStrategy {
+  val game = new ClassicGame(_match, inMemoryGameRecorder, new AIStrategy {
     override def getHand(matchId: MatchID): ClassicElement = {
       Scissors
     }

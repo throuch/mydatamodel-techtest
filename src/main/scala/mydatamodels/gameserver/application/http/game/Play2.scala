@@ -27,6 +27,7 @@ class Play2(gameactor: ActorRef)
           entity(as[GameAction]) { event =>
 
             complete {
+
               (gameactor ? (match_id, event)).mapTo[GameActionResponse].
                 map(status => HttpResponse(if (status.humanWins) StatusCodes.OK else StatusCodes.ImATeapot,
                   entity = status.message))
@@ -34,5 +35,6 @@ class Play2(gameactor: ActorRef)
           }
         }
     }
+
 }
 

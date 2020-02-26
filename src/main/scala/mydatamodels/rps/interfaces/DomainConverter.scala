@@ -1,6 +1,6 @@
-package mydatamodels.rps.domain
+package mydatamodels.rps.interfaces
 
-import mydatamodels.rps.interfaces.RPSElement
+import mydatamodels.rps.domain.{ClassicElement, Paper, Rock, Scissors}
 
 object DomainConverter {
 

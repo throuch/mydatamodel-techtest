@@ -10,7 +10,7 @@ import akka.stream.ActorMaterializer
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import com.github.swagger.akka.SwaggerSite
 import mydatamodels.core.application.http.common.{Ping, Status}
-import mydatamodels.gameserver.application.http.game.{GetResults, Play, Reset}
+import mydatamodels.gameserver.application.http.game.{Create, GetResults2, Play2}
 import mydatamodels.gameserver.application.injection.GameApplicationMixing
 import mydatamodels.gameserver.interfaces.swagger.SwaggerDocService
 import org.slf4j.LoggerFactory
@@ -29,6 +29,7 @@ class GameHttpServer(game: ActorRef)(implicit system: ActorSystem, appContext: G
         }
       }
       .handleNotFound {
+
         complete(HttpResponse(StatusCodes.InternalServerError))
       }
       .result()
@@ -44,9 +45,9 @@ class GameHttpServer(game: ActorRef)(implicit system: ActorSystem, appContext: G
         SwaggerDocService.routes ~
           new Ping().route ~
           new Status().route ~
-          new Play(game).route ~
-          new GetResults().route ~
-          new Reset().route ~
+          new Play2(game).route ~
+          new GetResults2().route ~
+          new Create().route ~
           swaggerSiteRoute)
     )
 
