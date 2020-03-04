@@ -4,7 +4,7 @@ The classic game Rock-Paper-Scissors
 
 #environment variables
 ADVERTISED_HOST=localhost
-ADVERTISED_PORT=9000
+ADVERTISED_PORT=8080
 
 ## build
 sbt docker:publishLocal
